@@ -239,7 +239,7 @@
             <div class="header-meta">
                 <div>
                     <h1>⚡ Skoal Bowl Draft Engine ⚡</h1>
-                    <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Neon War Room</p>
+                    <p class="subtitle">Neon War Room</p>
                 </div>
                 <div>
                     <span id="feedStatusPill" class="badge-depth badge-depth-WR" style="font-size: 11px; padding: 4px 10px;">
@@ -292,7 +292,7 @@
                 </div>
             </div>
 
-            <!-- MAIN DRAFT BOARD (CLIFF COLUMN REMOVED) -->
+            <!-- MAIN DRAFT BOARD -->
             <div class="table-container">
                 <table>
                     <thead>
@@ -317,7 +317,7 @@
             <div class="sidebar-panel" style="border-color: #1e294d;">
                 <div class="sidebar-title">
                     <span>📉 Positional Cliff (VONA)</span>
-                    <span style="font-size: 10px; color: #94a3b8;">Loss If You Wait</span>
+                    <span id="cliffHorizonLabel" style="font-size: 10px; color: #94a3b8;">Loss If Passed</span>
                 </div>
                 <div class="cliff-grid" id="cliffGridContainer"></div>
             </div>
@@ -398,7 +398,7 @@
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v3';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v5';
 
     let userSlot = 1;
     let currentOverallPick = 1;
@@ -741,11 +741,52 @@
         renderPositionalCliffs();
     }
 
+    /* MULTI-PICK USER TURN LOCATOR */
+    function getUserUpcomingPicks() {
+        let upcoming = null;
+        let subsequent = null;
+        let currentTeam = getTeamAtPick(currentOverallPick);
+
+        if (currentTeam === userSlot && !keepersByPick[currentOverallPick]) {
+            upcoming = currentOverallPick;
+            let p = currentOverallPick + 1;
+            while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
+                if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
+                    subsequent = p;
+                    break;
+                }
+                p++;
+            }
+        } else {
+            let p = currentOverallPick;
+            while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
+                if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
+                    if (upcoming === null) {
+                        upcoming = p;
+                    } else if (subsequent === null) {
+                        subsequent = p;
+                        break;
+                    }
+                }
+                p++;
+            }
+        }
+        return { upcoming, subsequent };
+    }
+
+    /* POSITIONAL CLIFF VONA ENGINE (TWO-PICK HORIZON) */
     function calculateVONA() {
-        let nextUserPick = getNextUserAvailablePick();
+        let { upcoming, subsequent } = getUserUpcomingPicks();
+        
+        let startPick = upcoming || currentOverallPick;
+        let endPick = subsequent || (startPick + TOTAL_TEAMS);
+        
+        // Find all intermediate picks between your current decision and your next turn
         let gapPicks = [];
-        for (let p = currentOverallPick; p < nextUserPick; p++) {
-            if (!keepersByPick[p]) gapPicks.push(getTeamAtPick(p));
+        for (let p = startPick + 1; p < endPick; p++) {
+            if (p <= (TOTAL_TEAMS * MAX_ROUNDS) && !keepersByPick[p]) {
+                gapPicks.push(getTeamAtPick(p));
+            }
         }
 
         let demand = { 'QB': 0, 'RB': 0, 'WR': 0, 'TE': 0, 'K': 0, 'DEF': 0 };
@@ -780,14 +821,15 @@
             let bestNow = available[0].pts;
             let expectedLossRank = Math.min(Math.round(demand[pos]) + 1, available.length);
             let nextAvailable = available[expectedLossRank - 1] ? available[expectedLossRank - 1].pts : available[available.length - 1].pts;
-            vonaValues[pos] = parseFloat((bestNow - nextAvailable).toFixed(2));
+            vonaValues[pos] = Math.max(0, parseFloat((bestNow - nextAvailable).toFixed(2)));
         });
 
+        // Dynamic Scarcity Run Alert
         let alert = document.getElementById('alertBanner');
         let alertText = document.getElementById('alertText');
         if (criticalQBTeams >= 3 && gapPicks.length > 0) {
             alert.style.display = 'flex';
-            alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalQBTeams} teams drafting before your turn have 0 QBs!`;
+            alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalQBTeams} teams drafting before your next turn have 0 QBs!`;
         } else if (vonaValues.WR >= 18.0) {
             alert.style.display = 'flex';
             alertText.innerHTML = `⚠️ <strong>STEEP WR CLIFF:</strong> Projected loss of ${vonaValues.WR} pts at WR before your next turn!`;
@@ -795,18 +837,25 @@
             alert.style.display = 'none';
         }
 
-        return vonaValues;
+        return { vonaValues, upcoming, subsequent };
     }
 
     /* RENDER POSITIONAL CLIFFS IN SIDEBAR */
     function renderPositionalCliffs() {
         let container = document.getElementById('cliffGridContainer');
-        let vonaMap = calculateVONA();
+        let horizonLabel = document.getElementById('cliffHorizonLabel');
+        let { vonaValues, upcoming, subsequent } = calculateVONA();
         let positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'];
+
+        if (subsequent) {
+            horizonLabel.innerText = `To Pick ${formatPick(subsequent)}`;
+        } else {
+            horizonLabel.innerText = `Loss If Passed`;
+        }
 
         container.innerHTML = '';
         positions.forEach(pos => {
-            let drop = vonaMap[pos] || 0;
+            let drop = vonaValues[pos] || 0;
             let isHigh = drop >= 15.0;
             container.innerHTML += `
                 <div class="cliff-box ${isHigh ? 'cliff-high-box' : ''}">
@@ -817,29 +866,17 @@
         });
     }
 
-    function getNextUserAvailablePick() {
-        let p = currentOverallPick;
-        if (getTeamAtPick(currentOverallPick) === userSlot && !keepersByPick[currentOverallPick]) {
-            return currentOverallPick;
-        }
-        p = currentOverallPick + 1;
-        while (p < 300) {
-            if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) return p;
-            p++;
-        }
-        return currentOverallPick;
-    }
-
     function renderTopTargets() {
-        let nextUserPick = getNextUserAvailablePick();
-        document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(nextUserPick)}`;
+        let { upcoming } = getUserUpcomingPicks();
+        let targetPick = upcoming || currentOverallPick;
+        document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(targetPick)}`;
 
         let userRoster = teams[userSlot].roster;
-        let vonaMap = calculateVONA();
+        let { vonaValues } = calculateVONA();
 
         let candidates = players.filter(p => !p.drafted).map(p => {
             let needMultiplier = 1.0;
-            let currentRound = Math.floor((nextUserPick - 1) / TOTAL_TEAMS) + 1;
+            let currentRound = Math.floor((targetPick - 1) / TOTAL_TEAMS) + 1;
 
             if (p.pos === 'QB') {
                 if (userRoster.QB.length === 0) needMultiplier = 1.35;
@@ -855,7 +892,7 @@
                 if (currentRound < 13) needMultiplier = 0.20;
             }
 
-            let targetScore = (p.vorp * needMultiplier) + ((vonaMap[p.pos] || 0) * 0.4);
+            let targetScore = (p.vorp * needMultiplier) + ((vonaValues[p.pos] || 0) * 0.4);
             return { player: p, targetScore: targetScore };
         });
 
@@ -942,7 +979,8 @@
             teamDisp.innerHTML = `${teams[currentTeamId].name} is on the clock`;
         }
 
-        let nextPick = getNextUserAvailablePick();
+        let { upcoming } = getUserUpcomingPicks();
+        let nextPick = upcoming || currentOverallPick;
         let gap = nextPick - currentOverallPick;
         nextDisp.innerHTML = `Pick ${formatPick(nextPick)}`;
         gapDisp.innerHTML = (currentTeamId === userSlot && !keepersByPick[currentOverallPick]) ? `Your current pick` : `${gap} pick${gap > 1 ? 's' : ''} away`;
