@@ -14,17 +14,18 @@
         }
         .container { max-width: 1550px; margin: 0 auto; }
         
-        /* SKOAL BOWL NEON TITLE */
+        /* SKOAL BOWL NEON TITLE & STATUS */
         h1 { 
             color: #00f0ff; 
             text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
             text-align: center; 
-            margin: 0 0 4px 0; 
+            margin: 0 0 2px 0; 
             font-size: 24px; 
             letter-spacing: 1px;
             text-transform: uppercase;
         }
-        p.subtitle { text-align: center; color: #94a3b8; font-size: 0.85em; margin-bottom: 12px; }
+        p.subtitle { text-align: center; color: #94a3b8; font-size: 0.85em; margin: 0 0 8px 0; }
+        .status-pill-container { text-align: center; margin-bottom: 12px; }
         
         /* TWO-COLUMN LAYOUT */
         .layout-grid { display: grid; grid-template-columns: 1fr 340px; gap: 14px; align-items: start; }
@@ -202,6 +203,13 @@
 <div class="container">
     <h1>⚡ Skoal Bowl Draft Engine ⚡</h1>
     <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Neon War Room & Dynamic VONA</p>
+
+    <!-- LIVE DATA SYNC STATUS INDICATOR -->
+    <div class="status-pill-container">
+        <span id="feedStatusPill" class="badge-depth" style="font-size: 11px; padding: 3px 10px;">
+            ⏳ Connecting to live feed...
+        </span>
+    </div>
 
     <!-- STATUS BAR -->
     <div class="status-grid">
@@ -568,13 +576,26 @@
     }
 
     async function loadLiveFeed() {
+        let statusPill = document.getElementById('feedStatusPill');
         try {
             let res = await fetch('./projections.json', { cache: 'no-store' });
             if (res.ok) {
                 players = await res.json();
+                if (statusPill) {
+                    statusPill.innerHTML = `🟢 Live Sync Connected (${players.length} Players)`;
+                    statusPill.style.borderColor = '#00ff88';
+                    statusPill.style.color = '#00ff88';
+                }
+            } else {
+                throw new Error("HTTP " + res.status);
             }
         } catch (e) {
             console.error("Could not load projections.json", e);
+            if (statusPill) {
+                statusPill.innerHTML = `🔴 Offline Fallback Mode`;
+                statusPill.style.borderColor = '#ff0055';
+                statusPill.style.color = '#ff0055';
+            }
         }
         initEngine();
     }
