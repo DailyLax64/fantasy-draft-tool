@@ -3,11 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Superflex Draft Assistant & Game Theory Engine</title>
+    <title>Skoal Bowl - Superflex Draft Assistant</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b1120; color: #f8fafc; margin: 0; padding: 12px 16px; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: #050814; 
+            color: #f8fafc; 
+            margin: 0; 
+            padding: 12px 16px; 
+        }
         .container { max-width: 1550px; margin: 0 auto; }
-        h1 { color: #38bdf8; text-align: center; margin: 0 0 4px 0; font-size: 22px; }
+        
+        /* SKOAL BOWL NEON TITLE */
+        h1 { 
+            color: #00f0ff; 
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+            text-align: center; 
+            margin: 0 0 4px 0; 
+            font-size: 24px; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         p.subtitle { text-align: center; color: #94a3b8; font-size: 0.85em; margin-bottom: 12px; }
         
         /* TWO-COLUMN LAYOUT */
@@ -16,104 +32,181 @@
 
         /* STATUS CARDS */
         .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 10px; }
-        .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 10px 12px; }
+        .card { 
+            background: #0a0f24; 
+            border: 1px solid #1e294d; 
+            border-radius: 8px; 
+            padding: 10px 12px; 
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.05);
+        }
         .card-label { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: bold; margin-bottom: 2px; }
-        .card-val { font-size: 17px; font-weight: bold; color: #38bdf8; }
-        .card-val.on-clock { color: #4ade80; animation: pulse 1.5s infinite; }
+        .card-val { font-size: 17px; font-weight: bold; color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
+        .card-val.on-clock { color: #39ff14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.6); animation: neonPulse 1.5s infinite; }
         
         /* ALERT BANNER */
-        .alert-banner { background: #451a03; border: 1px solid #d97706; color: #fef3c7; border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; font-size: 12px; display: none; align-items: center; justify-content: space-between; }
+        .alert-banner { 
+            background: rgba(255, 0, 85, 0.15); 
+            border: 1px solid #ff0055; 
+            color: #ffccd9; 
+            border-radius: 6px; 
+            padding: 8px 12px; 
+            margin-bottom: 10px; 
+            font-size: 12px; 
+            display: none; 
+            align-items: center; 
+            justify-content: space-between;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
         
         /* CONTROLS */
         .controls { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
         .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
-        input, select, button { padding: 7px 11px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #fff; font-size: 12px; }
-        input:focus, select:focus { border-color: #38bdf8; outline: none; }
-        select:disabled { opacity: 0.6; cursor: not-allowed; background: #0f172a; }
+        input, select, button { 
+            padding: 7px 11px; 
+            border-radius: 6px; 
+            border: 1px solid #1e294d; 
+            background: #0a0f24; 
+            color: #fff; 
+            font-size: 12px; 
+        }
+        input:focus, select:focus { border-color: #00f0ff; outline: none; box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
+        select:disabled { opacity: 0.6; cursor: not-allowed; background: #050814; }
+        
         .btn-filter { cursor: pointer; transition: 0.2s; font-weight: 500; }
-        .btn-filter.active { background: #0284c7; border-color: #0284c7; }
-        .btn-undo { background: #475569; cursor: pointer; border: none; font-weight: bold; }
-        .btn-undo:hover { background: #64748b; }
-        .btn-action { background: #334155; cursor: pointer; border: none; font-weight: 500; }
-        .btn-action:hover { background: #475569; }
+        .btn-filter.active { 
+            background: #00f0ff; 
+            color: #050814; 
+            font-weight: bold; 
+            border-color: #00f0ff; 
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        .btn-undo { background: #1e294d; cursor: pointer; border: 1px solid #334155; font-weight: bold; }
+        .btn-undo:hover { background: #334155; }
+        .btn-action { background: #0a0f24; cursor: pointer; border: 1px solid #00f0ff; color: #00f0ff; font-weight: 600; }
+        .btn-action:hover { background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
         
         /* TABLE */
-        .table-container { background: #1e293b; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; max-height: 72vh; }
+        .table-container { 
+            background: #0a0f24; 
+            border-radius: 8px; 
+            border: 1px solid #1e294d; 
+            overflow-x: auto; 
+            max-height: 72vh; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 8px 10px; border-bottom: 1px solid #334155; font-size: 12px; }
-        th { background: #0f172a; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
-        tr:hover { background: #1e293b; }
+        th, td { padding: 8px 10px; border-bottom: 1px solid #141b3a; font-size: 12px; }
+        th { background: #050814; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
+        tr:hover { background: #0f1738; }
         
-        /* BADGES */
-        .badge { padding: 2px 5px; border-radius: 4px; font-weight: bold; font-size: 10px; }
-        .badge-QB { background: #ef4444; color: #fff; }
-        .badge-WR { background: #3b82f6; color: #fff; }
-        .badge-RB { background: #10b981; color: #fff; }
-        .badge-TE { background: #f59e0b; color: #fff; }
-        .badge-K { background: #8b5cf6; color: #fff; }
-        .badge-DEF { background: #64748b; color: #fff; }
-        .badge-team { background: #334155; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; }
-        .badge-depth { background: #0369a1; color: #e0f2fe; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: bold; }
-        .badge-keeper { background: #eab308; color: #000; font-size: 9px; margin-left: 4px; font-weight: 800; }
+        /* DISTINCT NEON POSITION BADGES */
+        .badge { padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; letter-spacing: 0.5px; }
+        .badge-QB { background: #ff0055; color: #fff; box-shadow: 0 0 6px rgba(255, 0, 85, 0.6); }
+        .badge-RB { background: #00ff88; color: #050814; box-shadow: 0 0 6px rgba(0, 255, 136, 0.6); }
+        .badge-WR { background: #00d4ff; color: #050814; box-shadow: 0 0 6px rgba(0, 212, 255, 0.6); }
+        .badge-TE { background: #ffaa00; color: #050814; box-shadow: 0 0 6px rgba(255, 170, 0, 0.6); }
+        .badge-K { background: #b026ff; color: #fff; box-shadow: 0 0 6px rgba(176, 38, 255, 0.6); }
+        .badge-DEF { background: #6366f1; color: #fff; box-shadow: 0 0 6px rgba(99, 102, 241, 0.6); }
         
-        .btn-draft { background: #16a34a; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; padding: 4px 8px; color: white; font-size: 11px; }
-        .btn-draft:hover { background: #15803d; }
-        .cliff-tag { font-size: 10px; padding: 2px 5px; border-radius: 4px; font-weight: bold; background: #334155; color: #94a3b8; }
-        .cliff-high { background: #7f1d1d; color: #fca5a5; }
-        .vorp-positive { color: #4ade80; font-weight: bold; }
-        .vorp-negative { color: #94a3b8; }
+        .badge-team { background: #141b3a; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; border: 1px solid #1e294d; }
+        .badge-depth { background: rgba(0, 240, 255, 0.1); color: #00f0ff; border: 1px solid #00f0ff; font-size: 10px; padding: 1px 4px; border-radius: 3px; font-weight: bold; }
+        .badge-keeper { background: #ffe600; color: #050814; font-size: 9px; margin-left: 4px; font-weight: 800; box-shadow: 0 0 6px rgba(255, 230, 0, 0.6); }
+        
+        .btn-draft { 
+            background: #00ff88; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: 800; 
+            border-radius: 4px; 
+            padding: 4px 10px; 
+            color: #050814; 
+            font-size: 11px; 
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+            transition: 0.15s;
+        }
+        .btn-draft:hover { background: #39ff14; box-shadow: 0 0 12px rgba(57, 255, 20, 0.8); }
+        
+        .cliff-tag { font-size: 10px; padding: 2px 5px; border-radius: 4px; font-weight: bold; background: #141b3a; color: #94a3b8; }
+        .cliff-high { background: rgba(255, 0, 85, 0.2); color: #ff3366; border: 1px solid #ff0055; }
+        .vorp-positive { color: #00ff88; font-weight: bold; text-shadow: 0 0 6px rgba(0, 255, 136, 0.3); }
+        .vorp-negative { color: #64748b; }
         
         /* RIGHT SIDEBAR */
         .sidebar { display: flex; flex-direction: column; gap: 12px; }
-        .sidebar-panel { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
-        .sidebar-title { font-size: 12px; font-weight: bold; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-panel { 
+            background: #0a0f24; 
+            border: 1px solid #1e294d; 
+            border-radius: 8px; 
+            padding: 12px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .sidebar-title { 
+            font-size: 12px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            color: #00f0ff; 
+            letter-spacing: 0.5px; 
+            margin-bottom: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
         
         /* TARGETS VERTICAL STACK */
         .target-stack { display: flex; flex-direction: column; gap: 8px; }
-        .target-card { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .target-card:hover { border-color: #38bdf8; background: #1e293b; }
+        .target-card { 
+            background: #050814; 
+            border: 1px solid #1e294d; 
+            border-radius: 6px; 
+            padding: 8px 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: 0.2s; 
+        }
+        .target-card:hover { border-color: #00f0ff; box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
         .target-rank { font-size: 13px; font-weight: 800; color: #94a3b8; margin-right: 6px; }
         .target-name { font-size: 13px; font-weight: bold; color: #f8fafc; }
         .target-stats { font-size: 10px; color: #94a3b8; }
         
         /* DRAFT FEED */
         .feed-container { max-height: 44vh; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding-right: 2px; }
-        .feed-item { background: #0f172a; border: 1px solid #334155; border-radius: 5px; padding: 6px 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
-        .feed-item.feed-user { border-color: #38bdf8; background: #082f49; }
-        .feed-item.feed-keeper { border-color: #ca8a04; }
-        .feed-pick-badge { font-weight: bold; color: #38bdf8; font-size: 11px; margin-right: 6px; }
+        .feed-item { background: #050814; border: 1px solid #141b3a; border-radius: 5px; padding: 6px 8px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
+        .feed-item.feed-user { border-color: #00f0ff; background: rgba(0, 240, 255, 0.08); }
+        .feed-item.feed-keeper { border-color: #ffe600; }
+        .feed-pick-badge { font-weight: bold; color: #00f0ff; font-size: 11px; margin-right: 6px; }
         
         /* MODALS */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; }
-        .modal-content { background: #1e293b; border: 1px solid #475569; padding: 18px; border-radius: 8px; max-width: 620px; width: 92%; max-height: 85vh; overflow-y: auto; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background: #0a0f24; border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); padding: 18px; border-radius: 8px; max-width: 620px; width: 92%; max-height: 85vh; overflow-y: auto; }
         
         /* ACCORDION ROSTER */
-        .accordion-header { background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #334155; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; user-select: none; }
-        .accordion-header:hover { border-color: #38bdf8; }
-        .accordion-header.active { border-color: #38bdf8; background: #1e293b; border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
-        .accordion-body { background: #0b1120; border: 1px solid #38bdf8; border-top: none; padding: 10px; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; margin-bottom: 6px; display: none; }
+        .accordion-header { background: #050814; padding: 10px; border-radius: 6px; border: 1px solid #1e294d; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; user-select: none; }
+        .accordion-header:hover { border-color: #00f0ff; }
+        .accordion-header.active { border-color: #00f0ff; background: #0a0f24; border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
+        .accordion-body { background: #050814; border: 1px solid #00f0ff; border-top: none; padding: 10px; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; margin-bottom: 6px; display: none; }
         .accordion-body.open { display: block; }
         .roster-pos-group { margin-bottom: 6px; }
         .roster-pos-title { font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 3px; }
-        .roster-pill { display: inline-block; background: #1e293b; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 2px 3px 2px 0; border: 1px solid #334155; }
+        .roster-pill { display: inline-block; background: #0a0f24; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin: 2px 3px 2px 0; border: 1px solid #1e294d; }
         
         .team-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .keeper-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 6px 10px; margin-bottom: 5px; font-size: 12px; }
-        .btn-remove-keeper { background: #dc2626; border: none; color: white; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .keeper-row { display: flex; justify-content: space-between; align-items: center; background: #050814; border: 1px solid #1e294d; border-radius: 6px; padding: 6px 10px; margin-bottom: 5px; font-size: 12px; }
+        .btn-remove-keeper { background: #ff0055; border: none; color: white; border-radius: 4px; padding: 3px 6px; cursor: pointer; font-size: 10px; font-weight: bold; }
 
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        @keyframes neonPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>12-Team Superflex Draft Engine</h1>
-    <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Team & Depth Chart Matrix | Live Sync Ready</p>
+    <h1>⚡ Skoal Bowl Draft Engine ⚡</h1>
+    <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Neon War Room & Dynamic VONA</p>
 
     <!-- STATUS BAR -->
     <div class="status-grid">
         <div class="card">
-            <div class="card-label">Your Draft Position <span id="lockBadge" style="display:none; color:#f87171;">(LOCKED)</span></div>
+            <div class="card-label">Your Draft Position <span id="lockBadge" style="display:none; color:#ff0055;">(LOCKED)</span></div>
             <select id="userSlotSelect" onchange="setUserSlot(this.value)" style="width: 100%; font-weight: bold;"></select>
         </div>
         <div class="card">
@@ -124,7 +217,7 @@
         <div class="card">
             <div class="card-label">Your Next Pick</div>
             <div class="card-val" id="userNextPickDisplay">Pick 1.01</div>
-            <div style="font-size: 11px; color: #38bdf8;" id="gapDisplay">0 picks away</div>
+            <div style="font-size: 11px; color: #00f0ff;" id="gapDisplay">0 picks away</div>
         </div>
     </div>
 
@@ -133,7 +226,7 @@
         <span id="alertText">⚠️ High Run Risk detected ahead of your turn!</span>
     </div>
 
-    <!-- MAIN DASHBOARD (TABLE + SIDEBAR) -->
+    <!-- MAIN DASHBOARD -->
     <div class="layout-grid">
         <!-- LEFT: DRAFT BOARD -->
         <div>
@@ -148,7 +241,7 @@
                     <button class="btn-filter" onclick="setPosFilter('DEF')">DEF</button>
                 </div>
                 <div class="btn-group">
-                    <input type="text" id="searchInput" placeholder="Search player, team (KC, BUF), depth (RB1, WR2)..." onkeyup="renderTable()" style="min-width: 220px;">
+                    <input type="text" id="searchInput" placeholder="Search player, team, depth (RB1, WR2)..." onkeyup="renderTable()" style="min-width: 220px;">
                     <button class="btn-action" onclick="showTeamNamesModal()">⚙️ Teams</button>
                     <button class="btn-action" onclick="showKeepersModal()">🔒 Keepers</button>
                     <button class="btn-action" onclick="showRostersModal()">📋 Rosters</button>
@@ -175,19 +268,19 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDEBAR: TOP TARGETS & LIVE DRAFT FEED -->
+        <!-- RIGHT SIDEBAR -->
         <div class="sidebar">
-            <div class="sidebar-panel" style="border-color: #0284c7;">
+            <div class="sidebar-panel" style="border-color: #00f0ff; box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);">
                 <div class="sidebar-title">
                     <span>🎯 Top Targets</span>
-                    <span id="targetNextPickLabel" style="font-size: 10px; color: #38bdf8;">Pick 1.01</span>
+                    <span id="targetNextPickLabel" style="font-size: 10px; color: #00f0ff;">Pick 1.01</span>
                 </div>
                 <div class="target-stack" id="targetCardsContainer"></div>
             </div>
 
             <div class="sidebar-panel">
                 <div class="sidebar-title">
-                    <span>📜 Draft Feed</span>
+                    <span>📜 Skoal Bowl Draft Feed</span>
                     <span id="feedCount" style="font-size: 10px; color: #94a3b8;">0 picks</span>
                 </div>
                 <div class="feed-container" id="draftFeedContainer">
@@ -201,19 +294,19 @@
 <!-- TEAM NAMES MODAL -->
 <div id="namesModal" class="modal" onclick="closeModal(event, 'namesModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="color: #38bdf8; margin-top: 0; font-size: 17px;">Customize League Team Names</h2>
+        <h2 style="color: #00f0ff; margin-top: 0; font-size: 17px;">Skoal Bowl Franchises</h2>
         <div class="team-edit-grid" id="teamNamesInputs"></div>
-        <button style="width: 100%; background: #0284c7; border: none; font-weight: bold; cursor: pointer; padding: 8px;" onclick="saveTeamNames()">Save Team Names</button>
+        <button style="width: 100%; background: #00f0ff; color:#050814; border: none; font-weight: bold; cursor: pointer; padding: 8px;" onclick="saveTeamNames()">Save Team Names</button>
     </div>
 </div>
 
 <!-- KEEPER MODAL -->
 <div id="keepersModal" class="modal" onclick="closeModal(event, 'keepersModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="color: #38bdf8; margin-top: 0; font-size: 17px;">🔒 Keeper Slot Assignment</h2>
-        <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">Assign retained players and the specific draft round/slot they occupy:</p>
+        <h2 style="color: #00f0ff; margin-top: 0; font-size: 17px;">🔒 Keeper Slot Assignment</h2>
+        <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">Assign retained players and the draft round/slot they occupy:</p>
         
-        <div id="keeperControlsContainer" style="background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 12px;">
+        <div id="keeperControlsContainer" style="background: #050814; padding: 10px; border-radius: 6px; border: 1px solid #1e294d; margin-bottom: 12px;">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
                 <div>
                     <label style="font-size: 11px; color: #94a3b8; font-weight: bold;">Assign To Team:</label>
@@ -228,22 +321,22 @@
                 <label style="font-size: 11px; color: #94a3b8; font-weight: bold;">Select Player:</label>
                 <select id="keeperPlayerSelect" style="width: 100%; margin-top: 3px;"></select>
             </div>
-            <button style="width: 100%; background: #16a34a; border: none; font-weight: bold; cursor: pointer; padding: 7px;" onclick="addKeeperFromModal()">+ Lock In Keeper Slot</button>
+            <button style="width: 100%; background: #00ff88; color:#050814; border: none; font-weight: bold; cursor: pointer; padding: 7px;" onclick="addKeeperFromModal()">+ Lock In Keeper Slot</button>
         </div>
 
         <div style="font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">Assigned Keepers (<span id="keeperCount">0</span>)</div>
         <div id="keepersList" style="max-height: 200px; overflow-y: auto;"></div>
         
-        <button style="margin-top: 12px; width: 100%; background: #334155; border: none; padding: 7px; cursor: pointer;" onclick="document.getElementById('keepersModal').style.display='none'">Done</button>
+        <button style="margin-top: 12px; width: 100%; background: #1e294d; border: none; padding: 7px; cursor: pointer; color:#fff;" onclick="document.getElementById('keepersModal').style.display='none'">Done</button>
     </div>
 </div>
 
 <!-- ACCORDION TEAM ROSTERS MODAL -->
 <div id="rosterModal" class="modal" onclick="closeModal(event, 'rosterModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="color: #38bdf8; margin-top: 0; font-size: 17px;">League Rosters Tracker</h2>
+        <h2 style="color: #00f0ff; margin-top: 0; font-size: 17px;">Skoal Bowl Rosters Tracker</h2>
         <div id="rosterDetails"></div>
-        <button style="margin-top: 12px; width: 100%; cursor: pointer;" onclick="document.getElementById('rosterModal').style.display='none'">Close</button>
+        <button style="margin-top: 12px; width: 100%; background: #1e294d; border: none; padding: 7px; cursor: pointer; color:#fff;" onclick="document.getElementById('rosterModal').style.display='none'">Close</button>
     </div>
 </div>
 
@@ -258,302 +351,12 @@
     let keepersByPick = {};
     let currentPosFilter = 'ALL';
     let expandedTeamId = null;
+    let players = [];
 
     let teams = {};
     for (let i = 1; i <= TOTAL_TEAMS; i++) {
         teams[i] = { id: i, name: `Team ${i}`, roster: { 'QB': [], 'RB': [], 'WR': [], 'TE': [], 'K': [], 'DEF': [] } };
     }
-
-    // EMBEDDED MASTER DATASET (WITH TEAM & DEPTH CHART)
-    let players = [
-        // === 40 QUARTERBACKS ===
-        { name: "Josh Allen", pos: "QB", team: "BUF", depth: "QB1", passYds: 3800, passTd: 28, int: 11, rushYds: 540, rushTd: 10, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Lamar Jackson", pos: "QB", team: "BAL", depth: "QB1", passYds: 3500, passTd: 27, int: 8, rushYds: 720, rushTd: 5, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Drake Maye", pos: "QB", team: "NE", depth: "QB1", passYds: 4050, passTd: 28, int: 10, rushYds: 480, rushTd: 4, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jayden Daniels", pos: "QB", team: "WAS", depth: "QB1", passYds: 3650, passTd: 23, int: 9, rushYds: 650, rushTd: 6, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jalen Hurts", pos: "QB", team: "PHI", depth: "QB1", passYds: 3600, passTd: 25, int: 10, rushYds: 520, rushTd: 9, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Joe Burrow", pos: "QB", team: "CIN", depth: "QB1", passYds: 4300, passTd: 34, int: 10, rushYds: 180, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Caleb Williams", pos: "QB", team: "CHI", depth: "QB1", passYds: 3850, passTd: 26, int: 10, rushYds: 410, rushTd: 3, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Patrick Mahomes", pos: "QB", team: "KC", depth: "QB1", passYds: 4200, passTd: 30, int: 10, rushYds: 320, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Bo Nix", pos: "QB", team: "DEN", depth: "QB1", passYds: 3750, passTd: 26, int: 11, rushYds: 390, rushTd: 4, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Dak Prescott", pos: "QB", team: "DAL", depth: "QB1", passYds: 4150, passTd: 29, int: 11, rushYds: 200, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Trevor Lawrence", pos: "QB", team: "JAX", depth: "QB1", passYds: 3850, passTd: 25, int: 12, rushYds: 330, rushTd: 4, rec: 0, recYds: 0, recTd: 0, fum: 3 },
-        { name: "Justin Herbert", pos: "QB", team: "LAC", depth: "QB1", passYds: 3850, passTd: 25, int: 9, rushYds: 290, rushTd: 3, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Kyler Murray", pos: "QB", team: "ARI", depth: "QB1", passYds: 3600, passTd: 22, int: 10, rushYds: 460, rushTd: 4, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Brock Purdy", pos: "QB", team: "SF", depth: "QB1", passYds: 3950, passTd: 27, int: 12, rushYds: 210, rushTd: 3, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jared Goff", pos: "QB", team: "DET", depth: "QB1", passYds: 4250, passTd: 30, int: 10, rushYds: 40, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jordan Love", pos: "QB", team: "GB", depth: "QB1", passYds: 3900, passTd: 27, int: 11, rushYds: 160, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "C.J. Stroud", pos: "QB", team: "HOU", depth: "QB1", passYds: 3950, passTd: 24, int: 9, rushYds: 150, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Matthew Stafford", pos: "QB", team: "LAR", depth: "QB1", passYds: 4050, passTd: 30, int: 12, rushYds: 30, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Sam Darnold", pos: "QB", team: "MIN", depth: "QB1", passYds: 3800, passTd: 25, int: 13, rushYds: 140, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Baker Mayfield", pos: "QB", team: "TB", depth: "QB1", passYds: 3750, passTd: 25, int: 11, rushYds: 170, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jaxson Dart", pos: "QB", team: "NYG", depth: "QB1", passYds: 3400, passTd: 21, int: 11, rushYds: 430, rushTd: 5, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Bryce Young", pos: "QB", team: "CAR", depth: "QB1", passYds: 3450, passTd: 21, int: 11, rushYds: 230, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Geno Smith", pos: "QB", team: "SEA", depth: "QB1", passYds: 3600, passTd: 21, int: 11, rushYds: 180, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Tua Tagovailoa", pos: "QB", team: "MIA", depth: "QB1", passYds: 3750, passTd: 24, int: 12, rushYds: 50, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Aaron Rodgers", pos: "QB", team: "NYJ", depth: "QB1", passYds: 3450, passTd: 22, int: 9, rushYds: 40, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Cam Ward", pos: "QB", team: "TEN", depth: "QB1", passYds: 3350, passTd: 20, int: 12, rushYds: 260, rushTd: 3, rec: 0, recYds: 0, recTd: 0, fum: 3 },
-        { name: "Kirk Cousins", pos: "QB", team: "ATL", depth: "QB1", passYds: 3400, passTd: 21, int: 11, rushYds: 30, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Daniel Jones", pos: "QB", team: "IND", depth: "QB1", passYds: 3150, passTd: 17, int: 10, rushYds: 320, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 3 },
-        { name: "Deshaun Watson", pos: "QB", team: "CLE", depth: "QB1", passYds: 3200, passTd: 18, int: 10, rushYds: 270, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 3 },
-        { name: "Tyler Shough", pos: "QB", team: "LV", depth: "QB1", passYds: 3100, passTd: 18, int: 10, rushYds: 210, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Will Levis", pos: "QB", team: "TEN", depth: "QB2", passYds: 3100, passTd: 17, int: 12, rushYds: 220, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 3 },
-        { name: "Shedeur Sanders", pos: "QB", team: "NO", depth: "QB1", passYds: 3200, passTd: 19, int: 11, rushYds: 150, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Michael Penix Jr.", pos: "QB", team: "ATL", depth: "QB2", passYds: 3250, passTd: 19, int: 10, rushYds: 80, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "J.J. McCarthy", pos: "QB", team: "MIN", depth: "QB2", passYds: 3300, passTd: 20, int: 11, rushYds: 190, rushTd: 2, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Derek Carr", pos: "QB", team: "NO", depth: "QB2", passYds: 3300, passTd: 19, int: 10, rushYds: 50, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Russell Wilson", pos: "QB", team: "PIT", depth: "QB1", passYds: 3000, passTd: 17, int: 9, rushYds: 160, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Jacoby Brissett", pos: "QB", team: "NE", depth: "QB2", passYds: 2800, passTd: 15, int: 8, rushYds: 120, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 1 },
-        { name: "Gardner Minshew", pos: "QB", team: "LV", depth: "QB2", passYds: 2900, passTd: 15, int: 10, rushYds: 100, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Aidan O'Connell", pos: "QB", team: "LV", depth: "QB3", passYds: 2850, passTd: 14, int: 9, rushYds: 40, rushTd: 0, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-        { name: "Drew Lock", pos: "QB", team: "NYG", depth: "QB2", passYds: 2700, passTd: 14, int: 10, rushYds: 90, rushTd: 1, rec: 0, recYds: 0, recTd: 0, fum: 2 },
-
-        // === 76 RUNNING BACKS ===
-        { name: "Jahmyr Gibbs", pos: "RB", team: "DET", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1480, rushTd: 14, rec: 73, recYds: 650, recTd: 6, fum: 2 },
-        { name: "Bijan Robinson", pos: "RB", team: "ATL", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1630, rushTd: 12, rec: 74, recYds: 650, recTd: 5, fum: 2 },
-        { name: "James Cook III", pos: "RB", team: "BUF", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1560, rushTd: 12, rec: 32, recYds: 280, recTd: 4, fum: 1 },
-        { name: "Saquon Barkley", pos: "RB", team: "PHI", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1460, rushTd: 13, rec: 30, recYds: 260, recTd: 3, fum: 2 },
-        { name: "Jonathan Taylor", pos: "RB", team: "IND", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1370, rushTd: 13, rec: 38, recYds: 290, recTd: 2, fum: 2 },
-        { name: "Omarion Hampton", pos: "RB", team: "DAL", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1240, rushTd: 10, rec: 62, recYds: 440, recTd: 3, fum: 2 },
-        { name: "Kenneth Walker III", pos: "RB", team: "SEA", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1290, rushTd: 11, rec: 44, recYds: 350, recTd: 2, fum: 2 },
-        { name: "Ashton Jeanty", pos: "RB", team: "LV", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1230, rushTd: 9, rec: 65, recYds: 520, recTd: 2, fum: 2 },
-        { name: "Quinshon Judkins", pos: "RB", team: "CLE", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 860, rushTd: 7, rec: 28, recYds: 210, recTd: 1, fum: 1 },
-        { name: "De'Von Achane", pos: "RB", team: "MIA", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1150, rushTd: 8, rec: 65, recYds: 490, recTd: 3, fum: 1 },
-        { name: "Chase Brown", pos: "RB", team: "CIN", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1060, rushTd: 9, rec: 67, recYds: 460, recTd: 3, fum: 2 },
-        { name: "Derrick Henry", pos: "RB", team: "BAL", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1420, rushTd: 12, rec: 20, recYds: 160, recTd: 0, fum: 2 },
-        { name: "Josh Jacobs", pos: "RB", team: "GB", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1120, rushTd: 10, rec: 35, recYds: 280, recTd: 1, fum: 2 },
-        { name: "Breece Hall", pos: "RB", team: "NYJ", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1100, rushTd: 8, rec: 60, recYds: 500, recTd: 3, fum: 2 },
-        { name: "Christian McCaffrey", pos: "RB", team: "SF", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1050, rushTd: 9, rec: 70, recYds: 580, recTd: 4, fum: 2 },
-        { name: "Kyren Williams", pos: "RB", team: "LAR", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 1040, rushTd: 10, rec: 36, recYds: 270, recTd: 1, fum: 2 },
-        { name: "Travis Etienne Jr.", pos: "RB", team: "JAX", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 980, rushTd: 7, rec: 48, recYds: 380, recTd: 2, fum: 2 },
-        { name: "Isiah Pacheco", pos: "RB", team: "KC", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 950, rushTd: 8, rec: 38, recYds: 260, recTd: 1, fum: 2 },
-        { name: "David Montgomery", pos: "RB", team: "DET", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 880, rushTd: 8, rec: 28, recYds: 210, recTd: 1, fum: 1 },
-        { name: "Rachaad White", pos: "RB", team: "TB", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 820, rushTd: 6, rec: 55, recYds: 420, recTd: 2, fum: 1 },
-        { name: "Alvin Kamara", pos: "RB", team: "NO", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 780, rushTd: 5, rec: 68, recYds: 490, recTd: 3, fum: 2 },
-        { name: "Tony Pollard", pos: "RB", team: "TEN", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 890, rushTd: 6, rec: 42, recYds: 310, recTd: 1, fum: 1 },
-        { name: "Brian Robinson Jr.", pos: "RB", team: "WAS", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 850, rushTd: 7, rec: 25, recYds: 190, recTd: 1, fum: 1 },
-        { name: "Jonathon Brooks", pos: "RB", team: "CAR", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 860, rushTd: 6, rec: 35, recYds: 270, recTd: 2, fum: 1 },
-        { name: "Trey Benson", pos: "RB", team: "ARI", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 790, rushTd: 6, rec: 30, recYds: 240, recTd: 1, fum: 1 },
-        { name: "Chuba Hubbard", pos: "RB", team: "CAR", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 810, rushTd: 5, rec: 32, recYds: 220, recTd: 1, fum: 1 },
-        { name: "Javonte Williams", pos: "RB", team: "DEN", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 760, rushTd: 5, rec: 42, recYds: 290, recTd: 1, fum: 2 },
-        { name: "Jerome Ford", pos: "RB", team: "CLE", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 680, rushTd: 4, rec: 38, recYds: 260, recTd: 2, fum: 1 },
-        { name: "Ty Chandler", pos: "RB", team: "MIN", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 640, rushTd: 4, rec: 30, recYds: 210, recTd: 1, fum: 1 },
-        { name: "Nick Chubb", pos: "RB", team: "CLE", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 720, rushTd: 5, rec: 15, recYds: 100, recTd: 0, fum: 1 },
-        { name: "Jaylen Warren", pos: "RB", team: "PIT", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 690, rushTd: 4, rec: 45, recYds: 320, recTd: 1, fum: 1 },
-        { name: "Raheem Mostert", pos: "RB", team: "MIA", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 580, rushTd: 5, rec: 22, recYds: 170, recTd: 1, fum: 2 },
-        { name: "Zach Charbonnet", pos: "RB", team: "SEA", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 550, rushTd: 4, rec: 32, recYds: 220, recTd: 1, fum: 1 },
-        { name: "Rico Dowdle", pos: "RB", team: "DAL", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 610, rushTd: 4, rec: 28, recYds: 200, recTd: 1, fum: 1 },
-        { name: "Roschon Johnson", pos: "RB", team: "CHI", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 510, rushTd: 5, rec: 26, recYds: 180, recTd: 1, fum: 1 },
-        { name: "Blake Corum", pos: "RB", team: "LAR", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 530, rushTd: 5, rec: 18, recYds: 130, recTd: 0, fum: 1 },
-        { name: "MarShawn Lloyd", pos: "RB", team: "GB", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 490, rushTd: 3, rec: 22, recYds: 170, recTd: 1, fum: 2 },
-        { name: "Ray Davis", pos: "RB", team: "BUF", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 460, rushTd: 4, rec: 20, recYds: 150, recTd: 1, fum: 1 },
-        { name: "Isaac Guerendo", pos: "RB", team: "SF", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 440, rushTd: 3, rec: 21, recYds: 160, recTd: 1, fum: 1 },
-        { name: "Audric Estime", pos: "RB", team: "DEN", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 420, rushTd: 3, rec: 12, recYds: 90, recTd: 0, fum: 1 },
-        { name: "Kenneth Gainwell", pos: "RB", team: "PHI", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 450, rushTd: 3, rec: 35, recYds: 260, recTd: 1, fum: 1 },
-        { name: "Bucky Irving", pos: "RB", team: "TB", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 780, rushTd: 5, rec: 40, recYds: 310, recTd: 2, fum: 1 },
-        { name: "Tyrone Tracy Jr.", pos: "RB", team: "NYG", depth: "RB1", passYds: 0, passTd: 0, int: 0, rushYds: 720, rushTd: 4, rec: 38, recYds: 280, recTd: 2, fum: 1 },
-        { name: "Tank Bigsby", pos: "RB", team: "JAX", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 690, rushTd: 5, rec: 15, recYds: 110, recTd: 0, fum: 1 },
-        { name: "Tyler Allgeier", pos: "RB", team: "ATL", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 620, rushTd: 4, rec: 18, recYds: 140, recTd: 0, fum: 1 },
-        { name: "Braelon Allen", pos: "RB", team: "NYJ", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 560, rushTd: 4, rec: 20, recYds: 150, recTd: 1, fum: 1 },
-        { name: "Jordan Mason", pos: "RB", team: "SF", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 580, rushTd: 4, rec: 16, recYds: 120, recTd: 0, fum: 1 },
-        { name: "Kimani Vidal", pos: "RB", team: "LAC", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 480, rushTd: 3, rec: 22, recYds: 160, recTd: 1, fum: 1 },
-        { name: "Jaleel McLaughlin", pos: "RB", team: "DEN", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 410, rushTd: 2, rec: 34, recYds: 230, recTd: 1, fum: 1 },
-        { name: "Antonio Gibson", pos: "RB", team: "NE", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 420, rushTd: 2, rec: 30, recYds: 220, recTd: 1, fum: 1 },
-        { name: "Zamir White", pos: "RB", team: "LV", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 490, rushTd: 3, rec: 14, recYds: 90, recTd: 0, fum: 1 },
-        { name: "Alexander Mattison", pos: "RB", team: "LV", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 440, rushTd: 3, rec: 24, recYds: 170, recTd: 1, fum: 1 },
-        { name: "Gus Edwards", pos: "RB", team: "LAC", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 430, rushTd: 4, rec: 8, recYds: 50, recTd: 0, fum: 1 },
-        { name: "Keaton Mitchell", pos: "RB", team: "BAL", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 390, rushTd: 2, rec: 18, recYds: 150, recTd: 1, fum: 1 },
-        { name: "Dameon Pierce", pos: "RB", team: "HOU", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 380, rushTd: 2, rec: 12, recYds: 80, recTd: 0, fum: 1 },
-        { name: "Miles Sanders", pos: "RB", team: "CAR", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 360, rushTd: 2, rec: 20, recYds: 130, recTd: 0, fum: 1 },
-        { name: "Elijah Mitchell", pos: "RB", team: "SF", depth: "RB4", passYds: 0, passTd: 0, int: 0, rushYds: 350, rushTd: 2, rec: 10, recYds: 70, recTd: 0, fum: 1 },
-        { name: "Kareem Hunt", pos: "RB", team: "KC", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 390, rushTd: 3, rec: 15, recYds: 100, recTd: 0, fum: 1 },
-        { name: "Cam Akers", pos: "RB", team: "MIN", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 370, rushTd: 2, rec: 14, recYds: 90, recTd: 0, fum: 1 },
-        { name: "Khalil Herbert", pos: "RB", team: "CIN", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 380, rushTd: 2, rec: 15, recYds: 110, recTd: 0, fum: 1 },
-        { name: "D'Onta Foreman", pos: "RB", team: "CLE", depth: "RB4", passYds: 0, passTd: 0, int: 0, rushYds: 360, rushTd: 3, rec: 8, recYds: 50, recTd: 0, fum: 1 },
-        { name: "Samaje Perine", pos: "RB", team: "KC", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 250, rushTd: 1, rec: 35, recYds: 260, recTd: 1, fum: 1 },
-        { name: "Cordarrelle Patterson", pos: "RB", team: "PIT", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 280, rushTd: 2, rec: 18, recYds: 140, recTd: 0, fum: 1 },
-        { name: "Justice Hill", pos: "RB", team: "BAL", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 290, rushTd: 1, rec: 30, recYds: 220, recTd: 1, fum: 1 },
-        { name: "Clyde Edwards-Helaire", pos: "RB", team: "KC", depth: "RB4", passYds: 0, passTd: 0, int: 0, rushYds: 260, rushTd: 1, rec: 18, recYds: 120, recTd: 0, fum: 1 },
-        { name: "AJ Dillon", pos: "RB", team: "GB", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 340, rushTd: 2, rec: 14, recYds: 90, recTd: 0, fum: 1 },
-        { name: "Jeff Wilson Jr.", pos: "RB", team: "MIA", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 270, rushTd: 1, rec: 12, recYds: 80, recTd: 0, fum: 1 },
-        { name: "Jamaal Williams", pos: "RB", team: "NO", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 280, rushTd: 2, rec: 12, recYds: 70, recTd: 0, fum: 1 },
-        { name: "Boston Scott", pos: "RB", team: "LAR", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 230, rushTd: 1, rec: 15, recYds: 100, recTd: 0, fum: 1 },
-        { name: "Chase Edmonds", pos: "RB", team: "TB", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 220, rushTd: 1, rec: 20, recYds: 140, recTd: 0, fum: 1 },
-        { name: "Craig Reynolds", pos: "RB", team: "DET", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 210, rushTd: 1, rec: 10, recYds: 70, recTd: 0, fum: 0 },
-        { name: "Michael Carter", pos: "RB", team: "ARI", depth: "RB2", passYds: 0, passTd: 0, int: 0, rushYds: 230, rushTd: 1, rec: 22, recYds: 150, recTd: 0, fum: 1 },
-        { name: "Deon Jackson", pos: "RB", team: "NYG", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 200, rushTd: 1, rec: 15, recYds: 90, recTd: 0, fum: 0 },
-        { name: "Patrick Taylor", pos: "RB", team: "SF", depth: "RB5", passYds: 0, passTd: 0, int: 0, rushYds: 190, rushTd: 1, rec: 8, recYds: 50, recTd: 0, fum: 0 },
-        { name: "Trayveon Williams", pos: "RB", team: "CIN", depth: "RB3", passYds: 0, passTd: 0, int: 0, rushYds: 180, rushTd: 1, rec: 10, recYds: 60, recTd: 0, fum: 0 },
-        { name: "Sean Tucker", pos: "RB", team: "TB", depth: "RB4", passYds: 0, passTd: 0, int: 0, rushYds: 210, rushTd: 1, rec: 12, recYds: 80, recTd: 0, fum: 0 },
-
-        // === 100 WIDE RECEIVERS ===
-        { name: "Jaxon Smith-Njigba", pos: "WR", team: "SEA", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 30, rushTd: 0, rec: 111, recYds: 1568, recTd: 9, fum: 1 },
-        { name: "Puka Nacua", pos: "WR", team: "LAR", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 106, rushTd: 1, rec: 123, recYds: 1590, recTd: 10, fum: 1 },
-        { name: "Ja'Marr Chase", pos: "WR", team: "CIN", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 40, rushTd: 0, rec: 121, recYds: 1512, recTd: 11, fum: 1 },
-        { name: "Amon-Ra St. Brown", pos: "WR", team: "DET", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 25, rushTd: 0, rec: 117, recYds: 1391, recTd: 10, fum: 1 },
-        { name: "Drake London", pos: "WR", team: "ATL", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 102, recYds: 1328, recTd: 9, fum: 1 },
-        { name: "Justin Jefferson", pos: "WR", team: "MIN", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 99, recYds: 1302, recTd: 8, fum: 1 },
-        { name: "CeeDee Lamb", pos: "WR", team: "DAL", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 60, rushTd: 1, rec: 97, recYds: 1296, recTd: 8, fum: 1 },
-        { name: "A.J. Brown", pos: "WR", team: "PHI", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 92, recYds: 1234, recTd: 8, fum: 1 },
-        { name: "Nico Collins", pos: "WR", team: "HOU", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 88, recYds: 1212, recTd: 8, fum: 1 },
-        { name: "Rashee Rice", pos: "WR", team: "KC", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 99, recYds: 1180, recTd: 10, fum: 1 },
-        { name: "Tee Higgins", pos: "WR", team: "CIN", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 85, recYds: 1120, recTd: 9, fum: 1 },
-        { name: "Malik Nabers", pos: "WR", team: "NYG", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 35, rushTd: 0, rec: 94, recYds: 1220, recTd: 7, fum: 1 },
-        { name: "Marvin Harrison Jr.", pos: "WR", team: "ARI", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 88, recYds: 1190, recTd: 8, fum: 1 },
-        { name: "Garrett Wilson", pos: "WR", team: "NYJ", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 95, recYds: 1160, recTd: 7, fum: 1 },
-        { name: "Jaylen Waddle", pos: "WR", team: "MIA", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 25, rushTd: 0, rec: 82, recYds: 1100, recTd: 6, fum: 1 },
-        { name: "DeVonta Smith", pos: "WR", team: "PHI", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 84, recYds: 1080, recTd: 7, fum: 1 },
-        { name: "Cooper Kupp", pos: "WR", team: "LAR", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 89, recYds: 1050, recTd: 7, fum: 1 },
-        { name: "DK Metcalf", pos: "WR", team: "SEA", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 72, recYds: 1040, recTd: 8, fum: 1 },
-        { name: "Brandon Aiyuk", pos: "WR", team: "SF", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 75, recYds: 1060, recTd: 6, fum: 1 },
-        { name: "Deebo Samuel", pos: "WR", team: "SF", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 180, rushTd: 3, rec: 65, recYds: 880, recTd: 5, fum: 2 },
-        { name: "Chris Olave", pos: "WR", team: "NO", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 84, recYds: 1020, recTd: 5, fum: 1 },
-        { name: "Mike Evans", pos: "WR", team: "TB", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 990, recTd: 9, fum: 1 },
-        { name: "Terry McLaurin", pos: "WR", team: "WAS", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 78, recYds: 980, recTd: 6, fum: 1 },
-        { name: "DJ Moore", pos: "WR", team: "CHI", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 30, rushTd: 0, rec: 80, recYds: 970, recTd: 6, fum: 1 },
-        { name: "Zay Flowers", pos: "WR", team: "BAL", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 45, rushTd: 1, rec: 82, recYds: 950, recTd: 5, fum: 1 },
-        { name: "George Pickens", pos: "WR", team: "PIT", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 65, recYds: 960, recTd: 6, fum: 1 },
-        { name: "Amari Cooper", pos: "WR", team: "BUF", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 920, recTd: 5, fum: 1 },
-        { name: "Christian Kirk", pos: "WR", team: "JAX", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 74, recYds: 890, recTd: 5, fum: 1 },
-        { name: "Xavier Worthy", pos: "WR", team: "KC", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 60, rushTd: 1, rec: 62, recYds: 870, recTd: 6, fum: 1 },
-        { name: "Ladd McConkey", pos: "WR", team: "LAC", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 76, recYds: 880, recTd: 5, fum: 1 },
-        { name: "Brian Thomas Jr.", pos: "WR", team: "JAX", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 64, recYds: 890, recTd: 6, fum: 1 },
-        { name: "Keon Coleman", pos: "WR", team: "BUF", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 58, recYds: 830, recTd: 6, fum: 1 },
-        { name: "Rome Odunze", pos: "WR", team: "CHI", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 60, recYds: 820, recTd: 5, fum: 1 },
-        { name: "Stefon Diggs", pos: "WR", team: "HOU", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 72, recYds: 810, recTd: 5, fum: 1 },
-        { name: "Jayden Reed", pos: "WR", team: "GB", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 80, rushTd: 1, rec: 62, recYds: 790, recTd: 6, fum: 1 },
-        { name: "Jordan Addison", pos: "WR", team: "MIN", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 58, recYds: 780, recTd: 6, fum: 1 },
-        { name: "Jauan Jennings", pos: "WR", team: "SF", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 64, recYds: 770, recTd: 5, fum: 1 },
-        { name: "Josh Downs", pos: "WR", team: "IND", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 760, recTd: 4, fum: 1 },
-        { name: "Rashid Shaheed", pos: "WR", team: "NO", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 40, rushTd: 0, rec: 52, recYds: 780, recTd: 5, fum: 1 },
-        { name: "Jameson Williams", pos: "WR", team: "DET", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 50, rushTd: 1, rec: 50, recYds: 760, recTd: 5, fum: 1 },
-        { name: "Wan'Dale Robinson", pos: "WR", team: "NYG", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 70, recYds: 710, recTd: 4, fum: 1 },
-        { name: "Khalil Shakir", pos: "WR", team: "BUF", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 62, recYds: 720, recTd: 4, fum: 1 },
-        { name: "Jerry Jeudy", pos: "WR", team: "CLE", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 56, recYds: 710, recTd: 4, fum: 1 },
-        { name: "Dontayvion Wicks", pos: "WR", team: "GB", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 50, recYds: 680, recTd: 5, fum: 1 },
-        { name: "Christian Watson", pos: "WR", team: "GB", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 44, recYds: 660, recTd: 5, fum: 1 },
-        { name: "Courtland Sutton", pos: "WR", team: "DEN", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 62, recYds: 780, recTd: 5, fum: 1 },
-        { name: "Calvin Ridley", pos: "WR", team: "TEN", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 60, recYds: 810, recTd: 4, fum: 1 },
-        { name: "Jakobi Meyers", pos: "WR", team: "LV", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 740, recTd: 4, fum: 1 },
-        { name: "Keenan Allen", pos: "WR", team: "CHI", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 65, recYds: 680, recTd: 4, fum: 1 },
-        { name: "Tyler Lockett", pos: "WR", team: "SEA", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 55, recYds: 670, recTd: 4, fum: 1 },
-        { name: "DeAndre Hopkins", pos: "WR", team: "KC", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 56, recYds: 700, recTd: 4, fum: 1 },
-        { name: "Michael Pittman Jr.", pos: "WR", team: "IND", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 75, recYds: 820, recTd: 4, fum: 1 },
-        { name: "Diontae Johnson", pos: "WR", team: "BAL", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 750, recTd: 4, fum: 1 },
-        { name: "Hollywood Brown", pos: "WR", team: "KC", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 58, recYds: 720, recTd: 4, fum: 1 },
-        { name: "Gabe Davis", pos: "WR", team: "JAX", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 650, recTd: 5, fum: 1 },
-        { name: "Curtis Samuel", pos: "WR", team: "BUF", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 60, rushTd: 1, rec: 48, recYds: 520, recTd: 3, fum: 1 },
-        { name: "Demarcus Robinson", pos: "WR", team: "LAR", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 46, recYds: 560, recTd: 4, fum: 1 },
-        { name: "Adonai Mitchell", pos: "WR", team: "IND", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 45, recYds: 610, recTd: 4, fum: 1 },
-        { name: "Ricky Pearsall", pos: "WR", team: "SF", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 48, recYds: 620, recTd: 3, fum: 1 },
-        { name: "Ja'Lynn Polk", pos: "WR", team: "NE", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 44, recYds: 570, recTd: 3, fum: 1 },
-        { name: "Malachi Corley", pos: "WR", team: "NYJ", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 40, rushTd: 0, rec: 42, recYds: 490, recTd: 3, fum: 1 },
-        { name: "Jermaine Burton", pos: "WR", team: "CIN", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 38, recYds: 550, recTd: 3, fum: 1 },
-        { name: "Troy Franklin", pos: "WR", team: "DEN", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 40, recYds: 520, recTd: 3, fum: 1 },
-        { name: "Darnell Mooney", pos: "WR", team: "ATL", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 48, recYds: 610, recTd: 3, fum: 1 },
-        { name: "Rashod Bateman", pos: "WR", team: "BAL", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 46, recYds: 580, recTd: 3, fum: 1 },
-        { name: "Demario Douglas", pos: "WR", team: "NE", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 55, recYds: 590, recTd: 2, fum: 1 },
-        { name: "Josh Palmer", pos: "WR", team: "LAC", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 560, recTd: 3, fum: 1 },
-        { name: "Quentin Johnston", pos: "WR", team: "LAC", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 44, recYds: 540, recTd: 3, fum: 1 },
-        { name: "Adam Thielen", pos: "WR", team: "CAR", depth: "WR1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 54, recYds: 550, recTd: 3, fum: 1 },
-        { name: "Brandin Cooks", pos: "WR", team: "DAL", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 510, recTd: 3, fum: 1 },
-        { name: "Tre Tucker", pos: "WR", team: "LV", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 25, rushTd: 0, rec: 40, recYds: 490, recTd: 2, fum: 1 },
-        { name: "Jalen Tolbert", pos: "WR", team: "DAL", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 510, recTd: 3, fum: 1 },
-        { name: "Kendrick Bourne", pos: "WR", team: "NE", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 40, recYds: 480, recTd: 3, fum: 1 },
-        { name: "K.J. Osborn", pos: "WR", team: "NE", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 38, recYds: 450, recTd: 2, fum: 1 },
-        { name: "Noah Brown", pos: "WR", team: "WAS", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 36, recYds: 470, recTd: 2, fum: 1 },
-        { name: "Greg Dortch", pos: "WR", team: "ARI", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 46, recYds: 440, recTd: 2, fum: 1 },
-        { name: "Marquez Valdes-Scantling", pos: "WR", team: "NO", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 26, recYds: 460, recTd: 3, fum: 0 },
-        { name: "Tutu Atwell", pos: "WR", team: "LAR", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 34, recYds: 450, recTd: 2, fum: 0 },
-        { name: "Elijah Moore", pos: "WR", team: "CLE", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 44, recYds: 440, recTd: 2, fum: 1 },
-        { name: "Michael Wilson", pos: "WR", team: "ARI", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 38, recYds: 480, recTd: 3, fum: 1 },
-        { name: "Alec Pierce", pos: "WR", team: "IND", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 32, recYds: 510, recTd: 3, fum: 0 },
-        { name: "Ray-Ray McCloud", pos: "WR", team: "ATL", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 30, rushTd: 0, rec: 38, recYds: 410, recTd: 1, fum: 1 },
-        { name: "Dyami Brown", pos: "WR", team: "WAS", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 30, recYds: 420, recTd: 2, fum: 0 },
-        { name: "Cedric Tillman", pos: "WR", team: "CLE", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 36, recYds: 430, recTd: 2, fum: 1 },
-        { name: "Andrei Iosivas", pos: "WR", team: "CIN", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 34, recYds: 410, recTd: 3, fum: 0 },
-        { name: "Jalen McMillan", pos: "WR", team: "TB", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 36, recYds: 430, recTd: 3, fum: 1 },
-        { name: "Jordan Whittington", pos: "WR", team: "LAR", depth: "WR5", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 35, recYds: 400, recTd: 2, fum: 0 },
-        { name: "Devaughn Vele", pos: "WR", team: "DEN", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 36, recYds: 390, recTd: 2, fum: 0 },
-        { name: "Kayshon Boutte", pos: "WR", team: "NE", depth: "WR5", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 30, recYds: 380, recTd: 2, fum: 0 },
-        { name: "Luke McCaffrey", pos: "WR", team: "WAS", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 34, recYds: 370, recTd: 2, fum: 1 },
-        { name: "Bo Melton", pos: "WR", team: "GB", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 15, rushTd: 0, rec: 28, recYds: 360, recTd: 2, fum: 0 },
-        { name: "Olamide Zaccheaus", pos: "WR", team: "WAS", depth: "WR5", passYds: 0, passTd: 0, int: 0, rushYds: 10, rushTd: 0, rec: 30, recYds: 350, recTd: 2, fum: 0 },
-        { name: "KaVontae Turpin", pos: "WR", team: "DAL", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 60, rushTd: 1, rec: 26, recYds: 320, recTd: 2, fum: 1 },
-        { name: "Kalif Raymond", pos: "WR", team: "DET", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 28, recYds: 340, recTd: 2, fum: 0 },
-        { name: "Mack Hollins", pos: "WR", team: "BUF", depth: "WR5", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 26, recYds: 330, recTd: 2, fum: 0 },
-        { name: "Nelson Agholor", pos: "WR", team: "BAL", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 25, recYds: 320, recTd: 2, fum: 0 },
-        { name: "Van Jefferson", pos: "WR", team: "PIT", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 26, recYds: 310, recTd: 2, fum: 0 },
-        { name: "Sterling Shepard", pos: "WR", team: "TB", depth: "WR3", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 30, recYds: 290, recTd: 1, fum: 0 },
-        { name: "Lil'Jordan Humphrey", pos: "WR", team: "DEN", depth: "WR4", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 24, recYds: 280, recTd: 2, fum: 0 },
-        { name: "David Moore", pos: "WR", team: "CAR", depth: "WR2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 22, recYds: 270, recTd: 1, fum: 0 },
-
-        // === 20 TIGHT ENDS ===
-        { name: "Trey McBride", pos: "TE", team: "ARI", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 109, recYds: 1120, recTd: 6, fum: 1 },
-        { name: "Brock Bowers", pos: "TE", team: "LV", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 20, rushTd: 0, rec: 96, recYds: 1080, recTd: 8, fum: 1 },
-        { name: "George Kittle", pos: "TE", team: "SF", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 75, recYds: 940, recTd: 7, fum: 1 },
-        { name: "Travis Kelce", pos: "TE", team: "KC", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 82, recYds: 890, recTd: 6, fum: 1 },
-        { name: "Sam LaPorta", pos: "TE", team: "DET", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 78, recYds: 860, recTd: 7, fum: 1 },
-        { name: "Dallas Goedert", pos: "TE", team: "PHI", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 72, recYds: 790, recTd: 8, fum: 1 },
-        { name: "Mark Andrews", pos: "TE", team: "BAL", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 68, recYds: 780, recTd: 7, fum: 1 },
-        { name: "David Njoku", pos: "TE", team: "CLE", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 70, recYds: 750, recTd: 6, fum: 1 },
-        { name: "Jake Ferguson", pos: "TE", team: "DAL", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 72, recYds: 730, recTd: 5, fum: 1 },
-        { name: "Evan Engram", pos: "TE", team: "JAX", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 75, recYds: 710, recTd: 4, fum: 1 },
-        { name: "Dalton Kincaid", pos: "TE", team: "BUF", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 65, recYds: 700, recTd: 5, fum: 1 },
-        { name: "Kyle Pitts", pos: "TE", team: "ATL", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 58, recYds: 720, recTd: 4, fum: 1 },
-        { name: "Cole Kmet", pos: "TE", team: "CHI", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 60, recYds: 620, recTd: 5, fum: 1 },
-        { name: "T.J. Hockenson", pos: "TE", team: "MIN", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 62, recYds: 640, recTd: 4, fum: 1 },
-        { name: "Dalton Schultz", pos: "TE", team: "HOU", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 55, recYds: 580, recTd: 4, fum: 1 },
-        { name: "Cade Otton", pos: "TE", team: "TB", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 52, recYds: 530, recTd: 4, fum: 1 },
-        { name: "Hunter Henry", pos: "TE", team: "NE", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 48, recYds: 510, recTd: 4, fum: 1 },
-        { name: "Ben Sinnott", pos: "TE", team: "WAS", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 470, recTd: 4, fum: 1 },
-        { name: "Isaiah Likely", pos: "TE", team: "BAL", depth: "TE2", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 42, recYds: 480, recTd: 5, fum: 1 },
-        { name: "Tyler Conklin", pos: "TE", team: "NYJ", depth: "TE1", passYds: 0, passTd: 0, int: 0, rushYds: 0, rushTd: 0, rec: 48, recYds: 460, recTd: 2, fum: 1 },
-
-        // === 20 KICKERS ===
-        { name: "Brandon Aubrey", pos: "K", team: "DAL", depth: "K1", fgYds: 1450, pat: 44 },
-        { name: "Harrison Butker", pos: "K", team: "KC", depth: "K1", fgYds: 1280, pat: 46 },
-        { name: "Justin Tucker", pos: "K", team: "BAL", depth: "K1", fgYds: 1320, pat: 42 },
-        { name: "Jake Moody", pos: "K", team: "SF", depth: "K1", fgYds: 1240, pat: 48 },
-        { name: "Jake Elliott", pos: "K", team: "PHI", depth: "K1", fgYds: 1210, pat: 45 },
-        { name: "Ka'imi Fairbairn", pos: "K", team: "HOU", depth: "K1", fgYds: 1310, pat: 38 },
-        { name: "Cameron Dicker", pos: "K", team: "LAC", depth: "K1", fgYds: 1250, pat: 39 },
-        { name: "Tyler Bass", pos: "K", team: "BUF", depth: "K1", fgYds: 1180, pat: 47 },
-        { name: "Evan McPherson", pos: "K", team: "CIN", depth: "K1", fgYds: 1220, pat: 40 },
-        { name: "Jason Sanders", pos: "K", team: "MIA", depth: "K1", fgYds: 1190, pat: 42 },
-        { name: "Chris Boswell", pos: "K", team: "PIT", depth: "K1", fgYds: 1290, pat: 32 },
-        { name: "Younghoe Koo", pos: "K", team: "ATL", depth: "K1", fgYds: 1200, pat: 36 },
-        { name: "Matt Gay", pos: "K", team: "IND", depth: "K1", fgYds: 1160, pat: 37 },
-        { name: "Chase McLaughlin", pos: "K", team: "TB", depth: "K1", fgYds: 1180, pat: 35 },
-        { name: "Cairo Santos", pos: "K", team: "CHI", depth: "K1", fgYds: 1140, pat: 34 },
-        { name: "Jason Myers", pos: "K", team: "SEA", depth: "K1", fgYds: 1120, pat: 36 },
-        { name: "Daniel Carlson", pos: "K", team: "LV", depth: "K1", fgYds: 1110, pat: 32 },
-        { name: "Will Reichard", pos: "K", team: "MIN", depth: "K1", fgYds: 1130, pat: 35 },
-        { name: "Blake Grupe", pos: "K", team: "NO", depth: "K1", fgYds: 1090, pat: 34 },
-        { name: "Dustin Hopkins", pos: "K", team: "CLE", depth: "K1", fgYds: 1080, pat: 31 },
-
-        // === 20 DEFENSES / SPECIAL TEAMS ===
-        { name: "Baltimore Ravens DEF", pos: "DEF", team: "BAL", depth: "DST", pts: 128 },
-        { name: "San Francisco 49ers DEF", pos: "DEF", team: "SF", depth: "DST", pts: 124 },
-        { name: "New York Jets DEF", pos: "DEF", team: "NYJ", depth: "DST", pts: 122 },
-        { name: "Pittsburgh Steelers DEF", pos: "DEF", team: "PIT", depth: "DST", pts: 121 },
-        { name: "Cleveland Browns DEF", pos: "DEF", team: "CLE", depth: "DST", pts: 118 },
-        { name: "Kansas City Chiefs DEF", pos: "DEF", team: "KC", depth: "DST", pts: 117 },
-        { name: "Dallas Cowboys DEF", pos: "DEF", team: "DAL", depth: "DST", pts: 115 },
-        { name: "Buffalo Bills DEF", pos: "DEF", team: "BUF", depth: "DST", pts: 114 },
-        { name: "Philadelphia Eagles DEF", pos: "DEF", pts: 112, team: "PHI", depth: "DST" },
-        { name: "Houston Texans DEF", pos: "DEF", team: "HOU", depth: "DST", pts: 110 },
-        { name: "Detroit Lions DEF", pos: "DEF", team: "DET", depth: "DST", pts: 108 },
-        { name: "Minnesota Vikings DEF", pos: "DEF", team: "MIN", depth: "DST", pts: 106 },
-        { name: "Denver Broncos DEF", pos: "DEF", team: "DEN", depth: "DST", pts: 104 },
-        { name: "Chicago Bears DEF", pos: "DEF", team: "CHI", depth: "DST", pts: 102 },
-        { name: "Miami Dolphins DEF", pos: "DEF", team: "MIA", depth: "DST", pts: 100 },
-        { name: "Green Bay Packers DEF", pos: "DEF", team: "GB", depth: "DST", pts: 99 },
-        { name: "Los Angeles Chargers DEF", pos: "DEF", team: "LAC", depth: "DST", pts: 98 },
-        { name: "Seattle Seahawks DEF", pos: "DEF", team: "SEA", depth: "DST", pts: 96 },
-        { name: "Indianapolis Colts DEF", pos: "DEF", team: "IND", depth: "DST", pts: 94 },
-        { name: "Tampa Bay Buccaneers DEF", pos: "DEF", team: "TB", depth: "DST", pts: 92 }
-    ];
 
     function calculatePts(p) {
         if (p.pos === 'K') return parseFloat(((p.fgYds * 0.10) + (p.pat * 1.0)).toFixed(2));
@@ -764,19 +567,14 @@
         });
     }
 
-    // REMOTE JSON FEED AUTO-LOADER
-    async function loadLiveFeedIfAvailable() {
+    async function loadLiveFeed() {
         try {
             let res = await fetch('./projections.json', { cache: 'no-store' });
             if (res.ok) {
-                let liveData = await res.json();
-                if (Array.isArray(liveData) && liveData.length > 50) {
-                    players = liveData;
-                    console.log("✓ Live remote projections.json feed loaded successfully!");
-                }
+                players = await res.json();
             }
         } catch (e) {
-            console.log("Using embedded dataset (projections.json not present).");
+            console.error("Could not load projections.json", e);
         }
         initEngine();
     }
@@ -919,7 +717,7 @@
                         <span class="target-rank">#${idx + 1}</span>
                         <div>
                             <div class="target-name">${p.name} <span class="badge badge-${p.pos}">${p.pos}</span> <span class="badge-depth">${p.depth || ''}</span></div>
-                            <div class="target-stats">${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#4ade80;">+${p.vorp}</strong></div>
+                            <div class="target-stats">${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong></div>
                         </div>
                     </div>
                     <button class="btn-draft" onclick="draftPlayer('${p.name.replace(/'/g, "\\'")}')">Draft</button>
@@ -1105,12 +903,12 @@
             let html = `
                 <div class="accordion-header ${isOpen ? 'active' : ''}" onclick="toggleTeamAccordion(${i})">
                     <div>
-                        <strong style="color: ${i === userSlot ? '#38bdf8' : '#f8fafc'}">${t.name}${isUser}</strong>
+                        <strong style="color: ${i === userSlot ? '#00f0ff' : '#f8fafc'}">${t.name}${isUser}</strong>
                         <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">
                             QBs: ${t.roster.QB.length} | RBs: ${t.roster.RB.length} | WRs: ${t.roster.WR.length} | TEs: ${t.roster.TE.length} (${totalPlayers} total)
                         </div>
                     </div>
-                    <span style="font-size: 12px; color: #38bdf8;">${isOpen ? '▲' : '▼'}</span>
+                    <span style="font-size: 12px; color: #00f0ff;">${isOpen ? '▲' : '▼'}</span>
                 </div>
                 <div class="accordion-body ${isOpen ? 'open' : ''}">
                     ${renderPositionPills(t.roster, 'QB')}
@@ -1150,8 +948,7 @@
         if (e.target.id === modalId) document.getElementById(modalId).style.display = 'none';
     }
 
-    // Initialize with live feed check
-    loadLiveFeedIfAvailable();
+    loadLiveFeed();
 </script>
 </body>
 </html>
