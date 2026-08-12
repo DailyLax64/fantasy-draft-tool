@@ -1,33 +1,49 @@
 import json
 import requests
 
-def fetch_live_depth_and_teams():
-    """Fetches real-time depth chart & team status from Sleeper's free NFL API."""
-    url = "https://api.sleeper.app/v1/players/nfl"
+def fetch_sleeper_data():
+    """Fetches live NFL players metadata and projected stats from Sleeper's open API."""
+    players_meta = {}
+    projections_data = {}
+
+    # 1. Fetch live player metadata (Teams, Depth Charts, Status)
     try:
-        res = requests.get(url, timeout=30)
+        res = requests.get("https://api.sleeper.app/v1/players/nfl", timeout=30)
         if res.status_code == 200:
-            data = res.json()
-            mapping = {}
-            for pid, p in data.items():
+            for pid, p in res.json().items():
                 first = p.get('first_name', '') or ''
                 last = p.get('last_name', '') or ''
                 full_name = f"{first} {last}".strip()
-                
                 pos = p.get('position', '')
                 team = p.get('team') or 'FA'
                 depth_order = p.get('depth_chart_order')
                 depth_label = f"{pos}{depth_order}" if (pos and depth_order) else (p.get('depth_chart_position') or pos)
 
                 if full_name:
-                    mapping[full_name.lower()] = {
+                    players_meta[full_name.lower()] = {
+                        "pid": pid,
                         "team": team,
                         "depth": depth_label
                     }
-            return mapping
     except Exception as e:
-        print(f"Warning: Could not fetch Sleeper API: {e}")
-    return {}
+        print(f"Warning: Player metadata fetch error: {e}")
+
+    # 2. Fetch live season projections feed
+    for endpoint in [
+        "https://api.sleeper.app/projections/nfl/2026?season_type=regular",
+        "https://api.sleeper.app/projections/nfl/regular/2026"
+    ]:
+        try:
+            res = requests.get(endpoint, timeout=30)
+            if res.status_code == 200:
+                data = res.json()
+                if isinstance(data, dict):
+                    projections_data = data
+                    break
+        except Exception:
+            continue
+
+    return players_meta, projections_data
 
 # Schema: (Name, Pos, Team, Depth, PassYds, PassTd, Int, RushYds, RushTd, Rec, RecYds, RecTd, Fum)
 SKILL_PLAYERS = [
@@ -276,7 +292,6 @@ SKILL_PLAYERS = [
     ("Tyler Conklin", "TE", "NYJ", "TE1", 0, 0, 0, 0, 0, 48, 460, 2, 1)
 ]
 
-# Schema: (Name, Pos, Team, Depth, FgYds, Pat)
 KICKERS = [
     ("Brandon Aubrey", "K", "DAL", "K1", 1450, 44),
     ("Harrison Butker", "K", "KC", "K1", 1280, 46),
@@ -300,7 +315,6 @@ KICKERS = [
     ("Dustin Hopkins", "K", "CLE", "K1", 1080, 31)
 ]
 
-# Schema: (Name, Pos, Team, Depth, Pts)
 DEFENSES = [
     ("Baltimore Ravens DEF", "DEF", "BAL", "DST", 128),
     ("San Francisco 49ers DEF", "DEF", "SF", "DST", 124),
@@ -347,17 +361,38 @@ def build_player_objects():
     return res
 
 def main():
-    live_meta = fetch_live_depth_and_teams()
+    players_meta, projections_data = fetch_sleeper_data()
     players = build_player_objects()
     
-    # Update player metadata with live Sleeper API values if found
+    # Intelligently update player metadata & live stats if available online
     for p in players:
         key = p["name"].lower()
-        if key in live_meta:
-            if live_meta[key].get("team") and live_meta[key]["team"] != "FA":
-                p["team"] = live_meta[key]["team"]
-            if live_meta[key].get("depth"):
-                p["depth"] = live_meta[key]["depth"]
+        if key in players_meta:
+            meta = players_meta[key]
+            if meta.get("team") and meta["team"] != "FA":
+                p["team"] = meta["team"]
+            if meta.get("depth"):
+                p["depth"] = meta["depth"]
+
+            # Merge live stat projections if the API has published them
+            pid = meta.get("pid")
+            if pid and pid in projections_data:
+                proj = projections_data[pid]
+                if p["pos"] in ["QB", "RB", "WR", "TE"]:
+                    if "pass_yd" in proj: p["passYds"] = int(proj["pass_yd"])
+                    if "pass_td" in proj: p["passTd"] = int(proj["pass_td"])
+                    if "pass_int" in proj: p["int"] = int(proj["pass_int"])
+                    if "rush_yd" in proj: p["rushYds"] = int(proj["rush_yd"])
+                    if "rush_td" in proj: p["rushTd"] = int(proj["rush_td"])
+                    if "rec" in proj: p["rec"] = int(proj["rec"])
+                    if "rec_yd" in proj: p["recYds"] = int(proj["rec_yd"])
+                    if "rec_td" in proj: p["recTd"] = int(proj["rec_td"])
+                    if "fum_lost" in proj: p["fum"] = int(proj["fum_lost"])
+                elif p["pos"] == "K":
+                    if "fgm_yds" in proj: p["fgYds"] = int(proj["fgm_yds"])
+                    if "xpm" in proj: p["pat"] = int(proj["xpm"])
+                elif p["pos"] == "DEF":
+                    if "pts_std" in proj: p["pts"] = float(proj["pts_std"])
 
     with open("projections.json", "w") as f:
         json.dump(players, f, indent=2)
