@@ -11,11 +11,23 @@
         p.subtitle { text-align: center; color: #94a3b8; font-size: 0.85em; margin-bottom: 15px; }
         
         /* DRAFT STATUS PANEL */
-        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 12px; }
         .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px; }
         .card-label { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: bold; margin-bottom: 4px; }
         .card-val { font-size: 18px; font-weight: bold; color: #38bdf8; }
         .card-val.on-clock { color: #4ade80; animation: pulse 1.5s infinite; }
+        
+        /* TOP 3 TARGETS CAPSULE */
+        .target-capsule-container { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #0284c7; border-radius: 8px; padding: 12px 16px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.15); }
+        .target-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .target-title { font-size: 13px; font-weight: bold; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+        .target-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+        .target-card { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .target-card:hover { border-color: #38bdf8; background: #1e293b; }
+        .target-rank { font-size: 14px; font-weight: 800; color: #94a3b8; margin-right: 8px; }
+        .target-info { display: flex; flex-direction: column; gap: 2px; }
+        .target-name { font-size: 14px; font-weight: bold; color: #f8fafc; }
+        .target-stats { font-size: 11px; color: #94a3b8; }
         
         /* ALERT BANNER */
         .alert-banner { background: #451a03; border: 1px solid #d97706; color: #fef3c7; border-radius: 6px; padding: 10px 14px; margin-bottom: 15px; font-size: 13px; display: none; align-items: center; justify-content: space-between; }
@@ -25,14 +37,16 @@
         .btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
         input, select, button { padding: 8px 12px; border-radius: 6px; border: 1px solid #334155; background: #1e293b; color: #fff; font-size: 13px; }
         input:focus, select:focus { border-color: #38bdf8; outline: none; }
+        select:disabled { opacity: 0.6; cursor: not-allowed; background: #0f172a; border-color: #475569; }
         .btn-filter { cursor: pointer; transition: 0.2s; font-weight: 500; }
         .btn-filter.active { background: #0284c7; border-color: #0284c7; }
         .btn-undo { background: #475569; cursor: pointer; border: none; font-weight: bold; }
         .btn-undo:hover { background: #64748b; }
-        .btn-roster { background: #334155; cursor: pointer; border: none; }
+        .btn-action { background: #334155; cursor: pointer; border: none; font-weight: 500; }
+        .btn-action:hover { background: #475569; }
         
         /* TABLE */
-        .table-container { background: #1e293b; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; max-height: 68vh; }
+        .table-container { background: #1e293b; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; max-height: 65vh; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 9px 12px; border-bottom: 1px solid #334155; font-size: 13px; }
         th { background: #0f172a; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
@@ -46,6 +60,8 @@
         .badge-TE { background: #f59e0b; color: #fff; }
         .badge-K { background: #8b5cf6; color: #fff; }
         .badge-DEF { background: #64748b; color: #fff; }
+        .badge-keeper { background: #eab308; color: #000; font-size: 10px; margin-left: 4px; }
+        
         .btn-draft { background: #16a34a; border: none; cursor: pointer; font-weight: bold; border-radius: 4px; padding: 5px 10px; color: white; font-size: 12px; }
         .btn-draft:hover { background: #15803d; }
         .cliff-tag { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: bold; background: #334155; color: #94a3b8; }
@@ -53,10 +69,29 @@
         .vorp-positive { color: #4ade80; font-weight: bold; }
         .vorp-negative { color: #94a3b8; }
         
-        /* MODAL */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; }
-        .modal-content { background: #1e293b; border: 1px solid #475569; padding: 20px; border-radius: 8px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        /* MODALS */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; }
+        .modal-content { background: #1e293b; border: 1px solid #475569; padding: 20px; border-radius: 8px; max-width: 620px; width: 92%; max-height: 85vh; overflow-y: auto; }
         
+        /* ACCORDION ROSTER */
+        .accordion-header { background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #334155; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; user-select: none; }
+        .accordion-header:hover { border-color: #38bdf8; }
+        .accordion-header.active { border-color: #38bdf8; background: #1e293b; border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; }
+        .accordion-body { background: #0b1120; border: 1px solid #38bdf8; border-top: none; padding: 12px; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; margin-bottom: 8px; display: none; }
+        .accordion-body.open { display: block; }
+        .roster-pos-group { margin-bottom: 8px; }
+        .roster-pos-group:last-child { margin-bottom: 0; }
+        .roster-pos-title { font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
+        .roster-pill { display: inline-block; background: #1e293b; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin: 2px 4px 2px 0; border: 1px solid #334155; }
+        
+        /* TEAM EDIT GRID */
+        .team-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        
+        /* KEEPER ITEMS */
+        .keeper-row { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; }
+        .btn-remove-keeper { background: #dc2626; border: none; color: white; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-remove-keeper:hover { background: #b91c1c; }
+
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
     </style>
 </head>
@@ -64,26 +99,13 @@
 
 <div class="container">
     <h1>12-Team Superflex Draft Engine</h1>
-    <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Predictive Turn & Scarcity Engine</p>
+    <p class="subtitle">50 Pass Yds/Pt | 6 Pt Pass TD | 0.5 PPR | 3 WRs | Pre-Draft Keepers & Game Theory Engine</p>
 
     <!-- LIVE DRAFT STATUS PANEL -->
     <div class="status-grid">
         <div class="card">
-            <div class="card-label">Your Draft Position</div>
-            <select id="userSlotSelect" onchange="setUserSlot(this.value)" style="width: 100%; font-weight: bold;">
-                <option value="1">Team 1 (Pick 1.01)</option>
-                <option value="2">Team 2 (Pick 1.02)</option>
-                <option value="3">Team 3 (Pick 1.03)</option>
-                <option value="4">Team 4 (Pick 1.04)</option>
-                <option value="5">Team 5 (Pick 1.05)</option>
-                <option value="6">Team 6 (Pick 1.06)</option>
-                <option value="7">Team 7 (Pick 1.07)</option>
-                <option value="8">Team 8 (Pick 1.08)</option>
-                <option value="9">Team 9 (Pick 1.09)</option>
-                <option value="10">Team 10 (Pick 1.10)</option>
-                <option value="11">Team 11 (Pick 1.11)</option>
-                <option value="12">Team 12 (Pick 1.12)</option>
-            </select>
+            <div class="card-label">Your Draft Position <span id="lockBadge" style="display:none; color:#f87171;">(LOCKED)</span></div>
+            <select id="userSlotSelect" onchange="setUserSlot(this.value)" style="width: 100%; font-weight: bold;"></select>
         </div>
         <div class="card">
             <div class="card-label">Current Pick (On Clock)</div>
@@ -95,6 +117,15 @@
             <div class="card-val" id="userNextPickDisplay">Pick 1.01</div>
             <div style="font-size: 12px; color: #38bdf8;" id="gapDisplay">0 picks away</div>
         </div>
+    </div>
+
+    <!-- TOP 3 TARGETS CAPSULE FOR NEXT TURN -->
+    <div class="target-capsule-container">
+        <div class="target-header">
+            <div class="target-title">🎯 Recommended Targets For Your Next Turn (<span id="targetNextPickLabel">Pick 1.01</span>)</div>
+            <div style="font-size: 11px; color: #94a3b8;">Dynamically optimized for roster need & cliff risk</div>
+        </div>
+        <div class="target-cards-grid" id="targetCardsContainer"></div>
     </div>
 
     <!-- REAL-TIME SCARCITY / RUN ALERT -->
@@ -115,7 +146,9 @@
         </div>
         <div class="btn-group">
             <input type="text" id="searchInput" placeholder="Search player..." onkeyup="renderTable()">
-            <button class="btn-roster" onclick="showRostersModal()">Team Rosters</button>
+            <button class="btn-action" onclick="showTeamNamesModal()">⚙️ Edit Team Names</button>
+            <button class="btn-action" onclick="showKeepersModal()">🔒 Assign Keepers</button>
+            <button class="btn-action" onclick="showRostersModal()">📋 Team Rosters</button>
             <button class="btn-undo" onclick="undoLastPick()">↩ Undo Pick</button>
         </div>
     </div>
@@ -139,10 +172,48 @@
     </div>
 </div>
 
-<!-- TEAM ROSTERS MODAL -->
-<div id="rosterModal" class="modal" onclick="closeRostersModal(event)">
+<!-- TEAM NAMES MODAL -->
+<div id="namesModal" class="modal" onclick="closeModal(event, 'namesModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="color: #38bdf8; margin-top: 0;">League Rosters Tracker</h2>
+        <h2 style="color: #38bdf8; margin-top: 0; font-size: 18px;">Customize League Team Names</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px;">Set your league's managers or franchise names before starting the draft:</p>
+        <div class="team-edit-grid" id="teamNamesInputs"></div>
+        <button style="width: 100%; background: #0284c7; border: none; font-weight: bold; cursor: pointer; padding: 10px;" onclick="saveTeamNames()">Save Team Names</button>
+    </div>
+</div>
+
+<!-- PRE-DRAFT KEEPERS MODAL -->
+<div id="keepersModal" class="modal" onclick="closeModal(event, 'keepersModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="color: #38bdf8; margin-top: 0; font-size: 18px;">🔒 Pre-Draft Keeper Assignment</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px;">Assign retained players to their respective teams before starting the draft:</p>
+        
+        <div id="keeperControlsContainer" style="background: #0f172a; padding: 12px; border-radius: 6px; border: 1px solid #334155; margin-bottom: 15px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                <div>
+                    <label style="font-size: 11px; color: #94a3b8; font-weight: bold;">Assign To Team:</label>
+                    <select id="keeperTeamSelect" style="width: 100%; margin-top: 4px;"></select>
+                </div>
+                <div>
+                    <label style="font-size: 11px; color: #94a3b8; font-weight: bold;">Select Player:</label>
+                    <select id="keeperPlayerSelect" style="width: 100%; margin-top: 4px;"></select>
+                </div>
+            </div>
+            <button style="width: 100%; background: #16a34a; border: none; font-weight: bold; cursor: pointer; padding: 8px;" onclick="addKeeperFromModal()">+ Add Keeper</button>
+        </div>
+
+        <div style="font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">Current Keepers (<span id="keeperCount">0</span>)</div>
+        <div id="keepersList" style="max-height: 250px; overflow-y: auto;"></div>
+        
+        <button style="margin-top: 15px; width: 100%; background: #334155; border: none; padding: 8px; cursor: pointer;" onclick="document.getElementById('keepersModal').style.display='none'">Done</button>
+    </div>
+</div>
+
+<!-- EXPANDABLE TEAM ROSTERS MODAL -->
+<div id="rosterModal" class="modal" onclick="closeModal(event, 'rosterModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="color: #38bdf8; margin-top: 0; font-size: 18px;">League Rosters Tracker</h2>
+        <p style="font-size: 12px; color: #94a3b8; margin-bottom: 15px;">Click any team to expand and view their full player list:</p>
         <div id="rosterDetails"></div>
         <button style="margin-top: 15px; width: 100%; cursor: pointer;" onclick="document.getElementById('rosterModal').style.display='none'">Close</button>
     </div>
@@ -156,6 +227,7 @@
     let currentOverallPick = 1; // 1-indexed
     let draftHistory = [];
     let currentPosFilter = 'ALL';
+    let expandedTeamId = null;
 
     // INITIALIZE 12 TEAMS
     let teams = {};
@@ -464,25 +536,169 @@
         return parseFloat((pass + rush + rec + fum).toFixed(2));
     }
 
-    // SNAKE HELPER: Team drafting at overall pick P
+    // SNAKE HELPERS
     function getTeamAtPick(pick) {
         let round = Math.floor((pick - 1) / TOTAL_TEAMS) + 1;
         let posInRound = (pick - 1) % TOTAL_TEAMS + 1;
         return round % 2 !== 0 ? posInRound : (TOTAL_TEAMS - posInRound + 1);
     }
 
-    // SNAKE HELPER: Format Pick # (e.g., 2.04)
     function formatPick(pick) {
         let round = Math.floor((pick - 1) / TOTAL_TEAMS) + 1;
         let posInRound = (pick - 1) % TOTAL_TEAMS + 1;
         return `${round}.${posInRound < 10 ? '0' + posInRound : posInRound}`;
     }
 
-    // USER POSITION SELECTION
+    function populateSlotDropdown() {
+        let select = document.getElementById('userSlotSelect');
+        select.innerHTML = '';
+        for (let i = 1; i <= TOTAL_TEAMS; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = `${teams[i].name} (Pick 1.${i < 10 ? '0' + i : i})`;
+            if (i === userSlot) opt.selected = true;
+            select.appendChild(opt);
+        }
+    }
+
     function setUserSlot(slot) {
+        if (draftHistory.length > 0) return;
         userSlot = parseInt(slot);
         updateStatusPanel();
         renderTable();
+        renderTopTargets();
+    }
+
+    // EDIT TEAM NAMES
+    function showTeamNamesModal() {
+        let container = document.getElementById('teamNamesInputs');
+        container.innerHTML = '';
+        for (let i = 1; i <= TOTAL_TEAMS; i++) {
+            container.innerHTML += `
+                <div>
+                    <label style="font-size: 11px; color: #94a3b8; font-weight: bold;">Slot ${i} (Pick 1.${i < 10 ? '0' + i : i})</label>
+                    <input type="text" id="teamInput_${i}" value="${teams[i].name}" style="width: 100%; box-sizing: border-box; margin-top: 2px;">
+                </div>
+            `;
+        }
+        document.getElementById('namesModal').style.display = 'flex';
+    }
+
+    function saveTeamNames() {
+        for (let i = 1; i <= TOTAL_TEAMS; i++) {
+            let val = document.getElementById(`teamInput_${i}`).value.trim();
+            if (val) teams[i].name = val;
+        }
+        document.getElementById('namesModal').style.display = 'none';
+        populateSlotDropdown();
+        updateStatusPanel();
+        renderTable();
+        renderTopTargets();
+    }
+
+    // PRE-DRAFT KEEPERS MANAGER
+    function showKeepersModal() {
+        let teamSelect = document.getElementById('keeperTeamSelect');
+        teamSelect.innerHTML = '';
+        for (let i = 1; i <= TOTAL_TEAMS; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.innerText = teams[i].name;
+            teamSelect.appendChild(opt);
+        }
+
+        populateKeeperPlayerDropdown();
+        renderKeepersList();
+
+        let controls = document.getElementById('keeperControlsContainer');
+        if (draftHistory.length > 0) {
+            controls.style.display = 'none';
+        } else {
+            controls.style.display = 'block';
+        }
+
+        document.getElementById('keepersModal').style.display = 'flex';
+    }
+
+    function populateKeeperPlayerDropdown() {
+        let playerSelect = document.getElementById('keeperPlayerSelect');
+        playerSelect.innerHTML = '';
+        
+        let available = players.filter(p => !p.drafted).sort((a,b) => a.name.localeCompare(b.name));
+        available.forEach(p => {
+            let opt = document.createElement('option');
+            opt.value = p.name;
+            opt.innerText = `${p.name} (${p.pos})`;
+            playerSelect.appendChild(opt);
+        });
+    }
+
+    function addKeeperFromModal() {
+        if (draftHistory.length > 0) return;
+
+        let teamId = parseInt(document.getElementById('keeperTeamSelect').value);
+        let playerName = document.getElementById('keeperPlayerSelect').value;
+        if (!playerName) return;
+
+        let p = players.find(x => x.name === playerName);
+        if (!p) return;
+
+        p.drafted = true;
+        p.isKeeper = true;
+        p.keeperTeamId = teamId;
+        teams[teamId].roster[p.pos].push(p.name);
+
+        populateKeeperPlayerDropdown();
+        renderKeepersList();
+        renderTable();
+        renderTopTargets();
+    }
+
+    function removeKeeper(name) {
+        if (draftHistory.length > 0) return;
+
+        let p = players.find(x => x.name === name);
+        if (!p || !p.isKeeper) return;
+
+        let tId = p.keeperTeamId;
+        let rosterList = teams[tId].roster[p.pos];
+        let idx = rosterList.indexOf(p.name);
+        if (idx > -1) rosterList.splice(idx, 1);
+
+        p.drafted = false;
+        p.isKeeper = false;
+        delete p.keeperTeamId;
+
+        populateKeeperPlayerDropdown();
+        renderKeepersList();
+        renderTable();
+        renderTopTargets();
+    }
+
+    function renderKeepersList() {
+        let container = document.getElementById('keepersList');
+        let keeperPlayers = players.filter(p => p.isKeeper);
+        document.getElementById('keeperCount').innerText = keeperPlayers.length;
+
+        if (keeperPlayers.length === 0) {
+            container.innerHTML = `<div style="color: #64748b; font-size: 12px; font-style: italic; padding: 10px 0;">No keepers assigned yet.</div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        keeperPlayers.forEach(p => {
+            let t = teams[p.keeperTeamId];
+            let removeBtn = draftHistory.length === 0 ? `<button class="btn-remove-keeper" onclick="removeKeeper('${p.name.replace(/'/g, "\\'")}')">Remove</button>` : '';
+            container.innerHTML += `
+                <div class="keeper-row">
+                    <div>
+                        <strong>${p.name}</strong> <span class="badge badge-${p.pos}">${p.pos}</span>
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">Assigned to: <strong style="color:#38bdf8;">${t.name}</strong></div>
+                    </div>
+                    ${removeBtn}
+                </div>
+            `;
+        });
     }
 
     // INITIALIZATION
@@ -490,9 +706,9 @@
         players.forEach(p => {
             p.pts = calculatePts(p);
             p.drafted = false;
+            p.isKeeper = false;
         });
 
-        // Compute baseline thresholds
         let baselines = {};
         Object.keys(BASELINES).forEach(pos => {
             let posPlayers = players.filter(p => p.pos === pos).sort((a,b) => b.pts - a.pts);
@@ -504,24 +720,20 @@
             p.vorp = parseFloat((p.pts - baselines[p.pos]).toFixed(2));
         });
 
+        populateSlotDropdown();
         updateStatusPanel();
         renderTable();
+        renderTopTargets();
     }
 
-    // PREDICTIVE VONA & SCARCITY ANALYSIS
+    // DYNAMIC VONA & SCARCITY ANALYSIS
     function calculateVONA() {
-        // Find next pick index for user
         let nextUserPick = currentOverallPick;
         if (getTeamAtPick(currentOverallPick) === userSlot) {
-            // If on clock, look ahead to the following turn
             nextUserPick = currentOverallPick + 1;
-            while (getTeamAtPick(nextUserPick) !== userSlot && nextUserPick < 300) {
-                nextUserPick++;
-            }
+            while (getTeamAtPick(nextUserPick) !== userSlot && nextUserPick < 300) nextUserPick++;
         } else {
-            while (getTeamAtPick(nextUserPick) !== userSlot && nextUserPick < 300) {
-                nextUserPick++;
-            }
+            while (getTeamAtPick(nextUserPick) !== userSlot && nextUserPick < 300) nextUserPick++;
         }
 
         let gapPicks = [];
@@ -529,7 +741,6 @@
             gapPicks.push(getTeamAtPick(p));
         }
 
-        // Calculate expected demand per position from intermediate teams
         let demand = { 'QB': 0, 'RB': 0, 'WR': 0, 'TE': 0, 'K': 0, 'DEF': 0 };
         let criticalQBTeams = 0;
 
@@ -538,7 +749,6 @@
             let qbCount = t.roster.QB.length;
             let rbCount = t.roster.RB.length;
             let wrCount = t.roster.WR.length;
-            let teCount = t.roster.TE.length;
 
             if (qbCount === 0) { demand.QB += 0.8; criticalQBTeams++; }
             else if (qbCount === 1) demand.QB += 0.4;
@@ -550,10 +760,9 @@
             if (wrCount < 3) demand.WR += 0.9;
             else if (wrCount < 5) demand.WR += 0.4;
 
-            if (teCount === 0) demand.TE += 0.5;
+            if (t.roster.TE.length === 0) demand.TE += 0.5;
         });
 
-        // Calculate Positional Cliff Drop-off (VONA)
         let vonaValues = {};
         ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].forEach(pos => {
             let available = players.filter(p => !p.drafted && p.pos === pos).sort((a,b) => b.pts - a.pts);
@@ -567,15 +776,14 @@
             vonaValues[pos] = parseFloat((bestNow - nextAvailable).toFixed(2));
         });
 
-        // Trigger Run Risk Banner
         let alert = document.getElementById('alertBanner');
         let alertText = document.getElementById('alertText');
         if (criticalQBTeams >= 3 && gapPicks.length > 0) {
             alert.style.display = 'flex';
-            alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalQBTeams} teams drafting before your next turn have 0 QBs!`;
+            alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalQBTeams} teams drafting before your turn have 0 QBs!`;
         } else if (vonaValues.WR >= 18.0) {
             alert.style.display = 'flex';
-            alertText.innerHTML = `⚠️ <strong>STEEP WR CLIFF:</strong> Projected loss of ${vonaValues.WR} pts at WR before your next pick!`;
+            alertText.innerHTML = `⚠️ <strong>STEEP WR CLIFF:</strong> Projected loss of ${vonaValues.WR} pts at WR before your next turn!`;
         } else {
             alert.style.display = 'none';
         }
@@ -583,6 +791,67 @@
         return vonaValues;
     }
 
+    // TOP 3 TARGETS CAPSULE FOR USER'S UPCOMING PICK
+    function renderTopTargets() {
+        let currentTeamId = getTeamAtPick(currentOverallPick);
+        let nextUserPick = currentOverallPick;
+        if (currentTeamId === userSlot) {
+            nextUserPick = currentOverallPick;
+        } else {
+            while (getTeamAtPick(nextUserPick) !== userSlot && nextUserPick < 300) nextUserPick++;
+        }
+
+        document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(nextUserPick)}`;
+
+        let userRoster = teams[userSlot].roster;
+        let vonaMap = calculateVONA();
+
+        let candidates = players.filter(p => !p.drafted).map(p => {
+            let needMultiplier = 1.0;
+            let currentRound = Math.floor((nextUserPick - 1) / TOTAL_TEAMS) + 1;
+
+            if (p.pos === 'QB') {
+                if (userRoster.QB.length === 0) needMultiplier = 1.35;
+                else if (userRoster.QB.length === 1) needMultiplier = 1.15;
+                else if (userRoster.QB.length >= 2) needMultiplier = 0.70;
+            } else if (p.pos === 'WR') {
+                if (userRoster.WR.length < 3) needMultiplier = 1.25;
+            } else if (p.pos === 'RB') {
+                if (userRoster.RB.length < 2) needMultiplier = 1.15;
+            } else if (p.pos === 'TE') {
+                if (userRoster.TE.length >= 1) needMultiplier = 0.60;
+            } else if (p.pos === 'K' || p.pos === 'DEF') {
+                if (currentRound < 13) needMultiplier = 0.20;
+            }
+
+            let targetScore = (p.vorp * needMultiplier) + ((vonaMap[p.pos] || 0) * 0.4);
+            return { player: p, targetScore: targetScore };
+        });
+
+        candidates.sort((a, b) => b.targetScore - a.targetScore);
+        let top3 = candidates.slice(0, 3);
+
+        let container = document.getElementById('targetCardsContainer');
+        container.innerHTML = '';
+
+        top3.forEach((item, idx) => {
+            let p = item.player;
+            container.innerHTML += `
+                <div class="target-card">
+                    <div style="display: flex; align-items: center;">
+                        <span class="target-rank">#${idx + 1}</span>
+                        <div class="target-info">
+                            <div class="target-name">${p.name} <span class="badge badge-${p.pos}">${p.pos}</span></div>
+                            <div class="target-stats">${p.pts} pts | VORP: <strong style="color:#4ade80;">+${p.vorp}</strong></div>
+                        </div>
+                    </div>
+                    <button class="btn-draft" onclick="draftPlayer('${p.name.replace(/'/g, "\\'")}')">Draft</button>
+                </div>
+            `;
+        });
+    }
+
+    // STATUS PANEL & AUTO-LOCKING SLOT
     function updateStatusPanel() {
         let currentTeamId = getTeamAtPick(currentOverallPick);
         let round = Math.floor((currentOverallPick - 1) / TOTAL_TEAMS) + 1;
@@ -592,18 +861,27 @@
         let teamDisp = document.getElementById('currentTeamDisplay');
         let nextDisp = document.getElementById('userNextPickDisplay');
         let gapDisp = document.getElementById('gapDisplay');
+        let slotSelect = document.getElementById('userSlotSelect');
+        let lockBadge = document.getElementById('lockBadge');
+
+        if (draftHistory.length > 0) {
+            slotSelect.disabled = true;
+            lockBadge.style.display = 'inline';
+        } else {
+            slotSelect.disabled = false;
+            lockBadge.style.display = 'none';
+        }
 
         pickDisp.innerHTML = `Round ${round}, Pick ${pickInRound} (${formatPick(currentOverallPick)})`;
 
         if (currentTeamId === userSlot) {
             pickDisp.classList.add('on-clock');
-            teamDisp.innerHTML = `🔥 <strong>YOU ARE ON THE CLOCK!</strong> (Team ${userSlot})`;
+            teamDisp.innerHTML = `🔥 <strong>YOU ARE ON THE CLOCK!</strong> (${teams[userSlot].name})`;
         } else {
             pickDisp.classList.remove('on-clock');
-            teamDisp.innerHTML = `Team ${currentTeamId} is on the clock`;
+            teamDisp.innerHTML = `${teams[currentTeamId].name} is on the clock`;
         }
 
-        // Find Next Pick for user
         let nextPick = currentOverallPick;
         if (currentTeamId === userSlot) {
             nextPick = currentOverallPick + 1;
@@ -619,7 +897,7 @@
 
     function draftPlayer(name) {
         let p = players.find(x => x.name === name);
-        if (!p) return;
+        if (!p || p.drafted) return;
 
         let draftingTeamId = getTeamAtPick(currentOverallPick);
         p.drafted = true;
@@ -630,6 +908,7 @@
 
         updateStatusPanel();
         renderTable();
+        renderTopTargets();
     }
 
     function undoLastPick() {
@@ -644,6 +923,7 @@
         currentOverallPick--;
         updateStatusPanel();
         renderTable();
+        renderTopTargets();
     }
 
     function setPosFilter(pos) {
@@ -686,27 +966,66 @@
         });
     }
 
-    function showRostersModal() {
+    // EXPANDABLE ACCORDION ROSTERS (1 at a time)
+    function toggleTeamAccordion(teamId) {
+        expandedTeamId = expandedTeamId === teamId ? null : teamId;
+        renderRostersAccordion();
+    }
+
+    function renderRostersAccordion() {
         let container = document.getElementById('rosterDetails');
         container.innerHTML = '';
         for (let i = 1; i <= TOTAL_TEAMS; i++) {
             let t = teams[i];
             let isUser = i === userSlot ? " (YOU)" : "";
+            let isOpen = expandedTeamId === i;
+            let totalPlayers = t.roster.QB.length + t.roster.RB.length + t.roster.WR.length + t.roster.TE.length + t.roster.K.length + t.roster.DEF.length;
+
             let html = `
-                <div style="background: #0f172a; padding: 10px; margin-bottom: 8px; border-radius: 6px; border: ${i === userSlot ? '1px solid #38bdf8' : '1px solid #334155'}">
-                    <strong style="color: ${i === userSlot ? '#38bdf8' : '#f8fafc'}">${t.name}${isUser}</strong>
-                    <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">
-                        QBs: ${t.roster.QB.length} | RBs: ${t.roster.RB.length} | WRs: ${t.roster.WR.length} | TEs: ${t.roster.TE.length}
+                <div class="accordion-header ${isOpen ? 'active' : ''}" onclick="toggleTeamAccordion(${i})">
+                    <div>
+                        <strong style="color: ${i === userSlot ? '#38bdf8' : '#f8fafc'}">${t.name}${isUser}</strong>
+                        <div style="font-size: 11px; color: #94a3b8; margin-top: 2px;">
+                            QBs: ${t.roster.QB.length} | RBs: ${t.roster.RB.length} | WRs: ${t.roster.WR.length} | TEs: ${t.roster.TE.length} (${totalPlayers} total)
+                        </div>
                     </div>
+                    <span style="font-size: 14px; color: #38bdf8;">${isOpen ? '▲' : '▼'}</span>
+                </div>
+                <div class="accordion-body ${isOpen ? 'open' : ''}">
+                    ${renderPositionPills(t.roster, 'QB')}
+                    ${renderPositionPills(t.roster, 'RB')}
+                    ${renderPositionPills(t.roster, 'WR')}
+                    ${renderPositionPills(t.roster, 'TE')}
+                    ${renderPositionPills(t.roster, 'K')}
+                    ${renderPositionPills(t.roster, 'DEF')}
                 </div>
             `;
             container.innerHTML += html;
         }
+    }
+
+    function renderPositionPills(roster, pos) {
+        let list = roster[pos];
+        if (!list || list.length === 0) return '';
+        return `
+            <div class="roster-pos-group">
+                <div class="roster-pos-title">${pos}s (${list.length})</div>
+                <div>${list.map(name => {
+                    let pObj = players.find(x => x.name === name);
+                    let isKp = pObj && pObj.isKeeper ? `<span class="badge badge-keeper">KEEPER</span>` : '';
+                    return `<span class="roster-pill">${name} ${isKp}</span>`;
+                }).join('')}</div>
+            </div>
+        `;
+    }
+
+    function showRostersModal() {
+        renderRostersAccordion();
         document.getElementById('rosterModal').style.display = 'flex';
     }
 
-    function closeRostersModal(e) {
-        if (e.target.id === 'rosterModal') document.getElementById('rosterModal').style.display = 'none';
+    function closeModal(e, modalId) {
+        if (e.target.id === modalId) document.getElementById(modalId).style.display = 'none';
     }
 
     initEngine();
