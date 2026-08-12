@@ -72,6 +72,92 @@
             color: #ccffea; 
             box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
+
+        /* SNAKE TRACKER PANEL */
+        .snake-tracker-panel {
+            background: #0a0f24;
+            border: 1px solid #1e294d;
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        }
+        .snake-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            color: #94a3b8;
+        }
+        .snake-direction-badge {
+            color: #00f0ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .snake-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 4px;
+        }
+        @media (max-width: 900px) {
+            .snake-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 4px;
+            }
+        }
+        .snake-box {
+            background: #050814;
+            border: 1px solid #141b3a;
+            border-radius: 5px;
+            padding: 5px 2px;
+            text-align: center;
+            transition: all 0.2s ease;
+            position: relative;
+            min-height: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .snake-box.active-pick {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.15);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            animation: neonPulse 1.5s infinite;
+        }
+        .snake-box.active-pick.user-pick {
+            border-color: #00f0ff;
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+        }
+        .snake-box.completed-pick {
+            opacity: 0.45;
+            border-color: #0f1738;
+        }
+        .snake-pick-no {
+            font-size: 9px;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+        .snake-team-name {
+            font-size: 10px;
+            font-weight: 700;
+            color: #f8fafc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            padding: 0 2px;
+        }
+        .snake-user-badge {
+            font-size: 8px;
+            color: #00f0ff;
+            font-weight: 800;
+        }
         
         /* CONTROLS */
         .controls { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
@@ -264,7 +350,7 @@
 
 <div class="container">
     <div class="layout-grid">
-        <!-- LEFT COLUMN: HEADER, STATUS, CONTROLS & BOARD -->
+        <!-- LEFT COLUMN: HEADER, STATUS, SNAKE BAR, CONTROLS & BOARD -->
         <div>
             <div class="header-meta">
                 <div>
@@ -299,6 +385,15 @@
             <!-- DYNAMIC ALERT BANNER -->
             <div id="alertBanner" class="alert-banner">
                 <span id="alertText">⚠️ High Run Risk detected ahead of your turn!</span>
+            </div>
+
+            <!-- LIVE SNAKE DRAFT TRACKER ROW -->
+            <div class="snake-tracker-panel">
+                <div class="snake-header">
+                    <span id="snakeRoundLabel">ROUND 1</span>
+                    <span id="snakeDirectionLabel" class="snake-direction-badge">➡️ SNAKE ORDER: Team 1 → Team 12</span>
+                </div>
+                <div class="snake-grid" id="snakeGridContainer"></div>
             </div>
 
             <!-- CONTROLS & FILTER -->
@@ -440,7 +535,7 @@
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v8';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v9';
 
     // 2026 OFFICIAL NFL BYE WEEKS
     const BYE_WEEKS = {
@@ -573,6 +668,7 @@
         renderTable();
         renderTopTargets();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function showTeamNamesModal() {
@@ -602,6 +698,7 @@
         renderTopTargets();
         renderDraftFeed();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function showKeepersModal() {
@@ -686,6 +783,7 @@
         renderTable();
         renderTopTargets();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function removeKeeper(name) {
@@ -713,6 +811,7 @@
         renderTable();
         renderTopTargets();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function renderKeepersList() {
@@ -792,6 +891,49 @@
         renderTopTargets();
         renderDraftFeed();
         renderPositionalCliffs();
+        renderSnakeTracker();
+    }
+
+    /* RENDER DYNAMIC SNAKE TRACKER */
+    function renderSnakeTracker() {
+        let container = document.getElementById('snakeGridContainer');
+        let dirLabel = document.getElementById('snakeDirectionLabel');
+        let roundLabel = document.getElementById('snakeRoundLabel');
+        if (!container) return;
+
+        let round = Math.floor((currentOverallPick - 1) / TOTAL_TEAMS) + 1;
+        let isReverse = (round % 2 === 0);
+
+        roundLabel.innerText = `ROUND ${round}`;
+        dirLabel.innerHTML = isReverse 
+            ? `⬅️ REVERSE ORDER: ${teams[TOTAL_TEAMS].name} → ${teams[1].name}`
+            : `➡️ SNAKE ORDER: ${teams[1].name} → ${teams[TOTAL_TEAMS].name}`;
+
+        container.innerHTML = '';
+        for (let slot = 1; slot <= TOTAL_TEAMS; slot++) {
+            let pickNum = (round - 1) * TOTAL_TEAMS + slot;
+            let teamId = getTeamAtPick(pickNum);
+            let t = teams[teamId];
+            let isUser = (teamId === userSlot);
+            let isCurrent = (pickNum === currentOverallPick);
+            let isDone = (pickNum < currentOverallPick);
+
+            let boxClass = 'snake-box';
+            if (isCurrent) boxClass += ' active-pick';
+            if (isCurrent && isUser) boxClass += ' user-pick';
+            if (isDone) boxClass += ' completed-pick';
+
+            let formatted = formatPick(pickNum);
+            let userIndicator = isUser ? `<span class="snake-user-badge">⚡ (YOU)</span>` : '';
+
+            container.innerHTML += `
+                <div class="${boxClass}" title="Pick ${formatted} - ${t.name}">
+                    <div class="snake-pick-no">${formatted}</div>
+                    <div class="snake-team-name">${t.name}</div>
+                    ${userIndicator}
+                </div>
+            `;
+        }
     }
 
     /* REFINED DRAFT GAP & DEMAND FINDER */
@@ -882,7 +1024,6 @@
             vonaValues[pos] = Math.max(0, parseFloat((bestNow - nextAvailable).toFixed(2)));
         });
 
-        // Run Risk Banner
         let userQBCount = teams[userSlot].roster.QB.length;
         let criticalOpponents = opponentsWithZeroQB.size;
         let alert = document.getElementById('alertBanner');
@@ -922,7 +1063,6 @@
         let rankAtPos = availableSamePos.findIndex(p => p.name === player.name) + 1;
         if (rankAtPos <= 0) return 1;
 
-        // Cumulative Poisson probability P(X < rankAtPos)
         let prob = 0.0;
         for (let k = 0; k < rankAtPos; k++) {
             let term = Math.pow(expectedDemand, k) * Math.exp(-expectedDemand) / factorial(k);
@@ -956,7 +1096,6 @@
             else break;
         }
 
-        // Count how many available players are in this exact tier
         let countInTier = players.filter(p => {
             if (p.drafted || p.pos !== player.pos) return false;
             let pTier = 1;
@@ -976,7 +1115,6 @@
         if (!player.team || player.team === 'FA') return null;
 
         if (player.pos === 'QB') {
-            // Check if user has WR or TE from this team
             let passCatchers = [...userRoster.WR, ...userRoster.TE];
             let matched = passCatchers.some(name => {
                 let p = players.find(x => x.name === name);
@@ -984,7 +1122,6 @@
             });
             if (matched) return `⚡ ${player.team} STACK`;
         } else if (player.pos === 'WR' || player.pos === 'TE') {
-            // Check if user has QB from this team
             let matched = userRoster.QB.some(name => {
                 let p = players.find(x => x.name === name);
                 return p && p.team === player.team;
@@ -1002,7 +1139,6 @@
         let userRoster = teams[userSlot].roster;
         let isConflict = false;
 
-        // QB Superflex Bye conflicts are especially critical
         if (player.pos === 'QB' && userRoster.QB.length > 0) {
             let primaryQBName = userRoster.QB[0];
             let primaryQB = players.find(x => x.name === primaryQBName);
@@ -1076,7 +1212,7 @@
             }
 
             let stackTag = getStackInfo(p);
-            let stackMultiplier = stackTag ? 1.12 : 1.0; // 6-pt pass TD correlation boost
+            let stackMultiplier = stackTag ? 1.12 : 1.0;
             let handcuffBoost = isUpsideHandcuff(p, nextPickDisplay) ? 1.15 : 1.0;
 
             let targetScore = ((p.vorp * needMultiplier * stackMultiplier * handcuffBoost) + ((vonaValues[p.pos] || 0) * 0.4));
@@ -1213,6 +1349,7 @@
         renderTopTargets();
         renderDraftFeed();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function checkAndAdvanceKeeperPicks() {
@@ -1246,6 +1383,7 @@
         renderTopTargets();
         renderDraftFeed();
         renderPositionalCliffs();
+        renderSnakeTracker();
     }
 
     function setPosFilter(pos) {
@@ -1349,7 +1487,6 @@
             if (wrs[2]) { starterScore += wrs[2].pts; startersCount++; }
             if (tes[0]) { starterScore += tes[0].pts; startersCount++; }
 
-            // Remaining pool for Flex & Superflex
             let poolSFLEX = [
                 ...qbs.slice(1),
                 ...rbs.slice(2),
