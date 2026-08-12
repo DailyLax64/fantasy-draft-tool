@@ -321,13 +321,18 @@
         
         /* MODALS */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
-        .modal-content { background: #0a0f24; border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); padding: 18px; border-radius: 8px; max-width: 680px; width: 92%; max-height: 85vh; overflow-y: auto; }
+        .modal-content { background: #0a0f24; border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); padding: 18px; border-radius: 8px; max-width: 760px; width: 92%; max-height: 85vh; overflow-y: auto; }
         
-        /* POWER RANKINGS MODAL STYLING */
-        .rank-card { background: #050814; border: 1px solid #1e294d; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+        /* POWER RANKINGS CARD & LINEUP GRID */
+        .rank-card { background: #050814; border: 1px solid #1e294d; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
+        .rank-card:hover { border-color: #38bdf8; }
         .rank-card.rank-user { border-color: #00f0ff; background: rgba(0, 240, 255, 0.05); }
         .rank-bar-bg { background: #141b3a; height: 6px; border-radius: 3px; margin: 6px 0; overflow: hidden; }
         .rank-bar-fill { background: linear-gradient(90deg, #00d4ff, #00ff88); height: 100%; }
+        .rank-lineup-drilldown { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid #1e294d; font-size: 11px; }
+        .rank-lineup-drilldown.open { display: block; }
+        .starter-slot-row { display: grid; grid-template-columns: 60px 1fr 60px; gap: 6px; padding: 2px 0; border-bottom: 1px solid #0a0f24; }
+        .starter-slot-label { font-weight: bold; color: #94a3b8; font-size: 10px; }
 
         /* ACCORDION ROSTER */
         .accordion-header { background: #050814; padding: 10px; border-radius: 6px; border: 1px solid #1e294d; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; user-select: none; }
@@ -475,10 +480,12 @@
 <!-- STARTING LINEUP POWER RANKINGS MODAL -->
 <div id="rankingsModal" class="modal" onclick="closeModal(event, 'rankingsModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 style="color: #ffe600; margin-top: 0; font-size: 17px;">🏆 Starting Lineup Power Rankings</h2>
-        <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">Live projected starting firepower (1 QB, 2 RB, 3 WR, 1 TE, 1 SFLEX, 1 FLEX, 1 K, 1 DEF):</p>
+        <h2 style="color: #ffe600; margin-top: 0; font-size: 18px;">🏆 17-Game Lineup Power Rankings</h2>
+        <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">
+            Projected weekly matchup score (PPG) based on optimal 11-man starting lineups (1 QB, 2 RB, 3 WR, 1 TE, 1 SFLEX, 1 FLEX, 1 K, 1 DEF). Click any team to inspect their starters:
+        </p>
         <div id="rankingsList"></div>
-        <button style="margin-top: 12px; width: 100%; background: #1e294d; border: none; padding: 7px; cursor: pointer; color:#fff;" onclick="document.getElementById('rankingsModal').style.display='none'">Close</button>
+        <button style="margin-top: 12px; width: 100%; background: #1e294d; border: none; padding: 8px; cursor: pointer; color:#fff;" onclick="document.getElementById('rankingsModal').style.display='none'">Close</button>
     </div>
 </div>
 
@@ -534,10 +541,11 @@
 <script>
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 17;
+    const REGULAR_SEASON_GAMES = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v9';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v10';
 
-    // 2026 OFFICIAL NFL BYE WEEKS
+    // 2026 OFFICIAL NFL BYE WEEKS[cite: 1]
     const BYE_WEEKS = {
         'CAR': 5, 'KC': 5,
         'CIN': 6, 'DET': 6, 'MIA': 6, 'MIN': 6,
@@ -556,7 +564,9 @@
     let keepersByPick = {};
     let currentPosFilter = 'ALL';
     let expandedTeamId = null;
+    let expandedRankTeamId = null;
     let players = [];
+    let posBaselines = {};
 
     let teams = {};
     for (let i = 1; i <= TOTAL_TEAMS; i++) {
@@ -868,19 +878,21 @@
     function initEngine() {
         players.forEach(p => {
             p.pts = calculatePts(p);
+            p.ppg = parseFloat((p.pts / REGULAR_SEASON_GAMES).toFixed(2));
             if (p.drafted === undefined) p.drafted = false;
             if (p.isKeeper === undefined) p.isKeeper = false;
         });
 
-        let baselines = {};
+        posBaselines = {};
         Object.keys(BASELINES).forEach(pos => {
             let posPlayers = players.filter(p => p.pos === pos).sort((a,b) => b.pts - a.pts);
             let rank = BASELINES[pos];
-            baselines[pos] = posPlayers[rank - 1] ? posPlayers[rank - 1].pts : (posPlayers[posPlayers.length - 1] ? posPlayers[posPlayers.length - 1].pts : 0);
+            let baselinePts = posPlayers[rank - 1] ? posPlayers[rank - 1].pts : (posPlayers[posPlayers.length - 1] ? posPlayers[posPlayers.length - 1].pts : 0);
+            posBaselines[pos] = baselinePts;
         });
 
         players.forEach(p => {
-            p.vorp = parseFloat((p.pts - baselines[p.pos]).toFixed(2));
+            p.vorp = parseFloat((p.pts - posBaselines[p.pos]).toFixed(2));
         });
 
         loadDraftState();
@@ -1252,7 +1264,7 @@
                                 ${stackBadge}
                             </div>
                             <div class="target-stats">
-                                ${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong>
+                                ${p.team || ''} | ${p.ppg} PPG (${p.pts} pts) | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong>
                                 <span class="pill-survive ${survivalClass}" style="margin-left: 4px;">${survivalPct}% Survive</span>
                                 ${byeBadge ? `<div style="margin-top:2px;">${byeBadge}</div>` : ''}
                             </div>
@@ -1443,7 +1455,7 @@
                     </td>
                     <td><span class="badge-team">${p.team || 'FA'}</span></td>
                     <td><span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span></td>
-                    <td>${p.pts}</td>
+                    <td>${p.pts} <span style="color:#64748b; font-size:10px;">(${p.ppg}/wk)</span></td>
                     <td class="${vorpClass}">${p.vorp > 0 ? '+' + p.vorp : p.vorp}</td>
                     <td><span class="pill-survive ${survivalClass}">${survivalPct}%</span></td>
                     <td><button class="btn-draft" onclick="draftPlayer('${p.name.replace(/'/g, "\\'")}')">Draft</button></td>
@@ -1453,101 +1465,166 @@
         });
     }
 
-    /* REAL-TIME STARTING LINEUP POWER RANKINGS */
+    /* 17-GAME OPTIMAL LINEUP & POWER ENGINE */
+    function getOptimalTeamLineup(teamId) {
+        let t = teams[teamId];
+        let teamPlayers = [];
+        ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].forEach(pos => {
+            t.roster[pos].forEach(name => {
+                let p = players.find(x => x.name === name);
+                if (p) teamPlayers.push(p);
+            });
+        });
+
+        // Group by position sorted by PPG descending
+        let qbs = teamPlayers.filter(p => p.pos === 'QB').sort((a,b) => b.ppg - a.ppg);
+        let rbs = teamPlayers.filter(p => p.pos === 'RB').sort((a,b) => b.ppg - a.ppg);
+        let wrs = teamPlayers.filter(p => p.pos === 'WR').sort((a,b) => b.ppg - a.ppg);
+        let tes = teamPlayers.filter(p => p.pos === 'TE').sort((a,b) => b.ppg - a.ppg);
+        let ks  = teamPlayers.filter(p => p.pos === 'K').sort((a,b) => b.ppg - a.ppg);
+        let defs= teamPlayers.filter(p => p.pos === 'DEF').sort((a,b) => b.ppg - a.ppg);
+
+        // Standard Replacement Baselines per week (17 games)
+        let basePPG = {
+            'QB': parseFloat((posBaselines['QB'] / REGULAR_SEASON_GAMES).toFixed(2)),
+            'RB': parseFloat((posBaselines['RB'] / REGULAR_SEASON_GAMES).toFixed(2)),
+            'WR': parseFloat((posBaselines['WR'] / REGULAR_SEASON_GAMES).toFixed(2)),
+            'TE': parseFloat((posBaselines['TE'] / REGULAR_SEASON_GAMES).toFixed(2)),
+            'K':  parseFloat((posBaselines['K']  / REGULAR_SEASON_GAMES).toFixed(2)),
+            'DEF':parseFloat((posBaselines['DEF']/ REGULAR_SEASON_GAMES).toFixed(2))
+        };
+
+        let starters = {
+            'QB':   { slot: 'QB',   player: qbs[0] || null, baseline: basePPG['QB'] },
+            'RB1':  { slot: 'RB1',  player: rbs[0] || null, baseline: basePPG['RB'] },
+            'RB2':  { slot: 'RB2',  player: rbs[1] || null, baseline: basePPG['RB'] },
+            'WR1':  { slot: 'WR1',  player: wrs[0] || null, baseline: basePPG['WR'] },
+            'WR2':  { slot: 'WR2',  player: wrs[1] || null, baseline: basePPG['WR'] },
+            'WR3':  { slot: 'WR3',  player: wrs[2] || null, baseline: basePPG['WR'] },
+            'TE':   { slot: 'TE',   player: tes[0] || null, baseline: basePPG['TE'] },
+            'SFLEX':{ slot: 'SFLEX',player: null,           baseline: basePPG['QB'] },
+            'FLEX': { slot: 'FLEX', player: null,           baseline: basePPG['WR'] },
+            'K':    { slot: 'K',    player: ks[0] || null,  baseline: basePPG['K'] },
+            'DEF':  { slot: 'DEF',  player: defs[0] || null,baseline: basePPG['DEF'] }
+        };
+
+        let usedSet = new Set(Object.values(starters).map(s => s.player).filter(p => p !== null));
+
+        // Assign SFLEX from remaining QBs, RBs, WRs, TEs
+        let sflexPool = teamPlayers.filter(p => !usedSet.has(p) && ['QB', 'RB', 'WR', 'TE'].includes(p.pos)).sort((a,b) => b.ppg - a.ppg);
+        if (sflexPool.length > 0) {
+            starters['SFLEX'].player = sflexPool[0];
+            usedSet.add(sflexPool[0]);
+        }
+
+        // Assign FLEX from remaining RBs, WRs, TEs
+        let flexPool = teamPlayers.filter(p => !usedSet.has(p) && ['RB', 'WR', 'TE'].includes(p.pos)).sort((a,b) => b.ppg - a.ppg);
+        if (flexPool.length > 0) {
+            starters['FLEX'].player = flexPool[0];
+            usedSet.add(flexPool[0]);
+        }
+
+        // Calculate metrics
+        let actualDraftedStarterPPG = 0;
+        let pacingProjectedLineupPPG = 0;
+        let startersCount = 0;
+
+        Object.values(starters).forEach(s => {
+            if (s.player) {
+                actualDraftedStarterPPG += s.player.ppg;
+                pacingProjectedLineupPPG += s.player.ppg;
+                startersCount++;
+            } else {
+                pacingProjectedLineupPPG += s.baseline; // Impute replacement level for uncompleted slot
+            }
+        });
+
+        // Bench Depth Value Score (Diminishing return on depth)
+        let benchPlayers = teamPlayers.filter(p => !usedSet.has(p)).sort((a,b) => b.ppg - a.ppg);
+        let benchDepthRating = benchPlayers.reduce((acc, p) => acc + (p.ppg * 0.20), 0);
+
+        return {
+            starters,
+            bench: benchPlayers,
+            startersCount,
+            totalDrafted: teamPlayers.length,
+            actualDraftedStarterPPG: parseFloat(actualDraftedStarterPPG.toFixed(1)),
+            pacingProjectedLineupPPG: parseFloat((pacingProjectedLineupPPG + benchDepthRating).toFixed(1)),
+            benchDepthRating: parseFloat(benchDepthRating.toFixed(1))
+        };
+    }
+
+    function toggleRankLineup(teamId) {
+        expandedRankTeamId = (expandedRankTeamId === teamId) ? null : teamId;
+        showRankingsModal();
+    }
+
+    /* REAL-TIME POWER RANKINGS MODAL */
     function showRankingsModal() {
         let container = document.getElementById('rankingsList');
         let rankings = [];
 
         for (let i = 1; i <= TOTAL_TEAMS; i++) {
-            let t = teams[i];
-            let teamPlayers = [];
-            ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].forEach(pos => {
-                t.roster[pos].forEach(name => {
-                    let p = players.find(x => x.name === name);
-                    if (p) teamPlayers.push(p);
-                });
-            });
-
-            // Calculate Optimal Starting Lineup (1 QB, 2 RB, 3 WR, 1 TE, 1 SFLEX, 1 FLEX, 1 K, 1 DEF)
-            let qbs = teamPlayers.filter(p => p.pos === 'QB').sort((a,b) => b.pts - a.pts);
-            let rbs = teamPlayers.filter(p => p.pos === 'RB').sort((a,b) => b.pts - a.pts);
-            let wrs = teamPlayers.filter(p => p.pos === 'WR').sort((a,b) => b.pts - a.pts);
-            let tes = teamPlayers.filter(p => p.pos === 'TE').sort((a,b) => b.pts - a.pts);
-            let ks  = teamPlayers.filter(p => p.pos === 'K').sort((a,b) => b.pts - a.pts);
-            let defs= teamPlayers.filter(p => p.pos === 'DEF').sort((a,b) => b.pts - a.pts);
-
-            let starterScore = 0;
-            let startersCount = 0;
-
-            if (qbs[0]) { starterScore += qbs[0].pts; startersCount++; }
-            if (rbs[0]) { starterScore += rbs[0].pts; startersCount++; }
-            if (rbs[1]) { starterScore += rbs[1].pts; startersCount++; }
-            if (wrs[0]) { starterScore += wrs[0].pts; startersCount++; }
-            if (wrs[1]) { starterScore += wrs[1].pts; startersCount++; }
-            if (wrs[2]) { starterScore += wrs[2].pts; startersCount++; }
-            if (tes[0]) { starterScore += tes[0].pts; startersCount++; }
-
-            let poolSFLEX = [
-                ...qbs.slice(1),
-                ...rbs.slice(2),
-                ...wrs.slice(3),
-                ...tes.slice(1)
-            ].sort((a,b) => b.pts - a.pts);
-
-            if (poolSFLEX[0]) {
-                starterScore += poolSFLEX[0].pts;
-                startersCount++;
-            }
-
-            let poolFLEX = [
-                ...rbs.slice(2),
-                ...wrs.slice(3),
-                ...tes.slice(1)
-            ].filter(p => p !== poolSFLEX[0]).sort((a,b) => b.pts - a.pts);
-
-            if (poolFLEX[0]) {
-                starterScore += poolFLEX[0].pts;
-                startersCount++;
-            }
-
-            if (ks[0]) { starterScore += ks[0].pts; startersCount++; }
-            if (defs[0]) { starterScore += defs[0].pts; startersCount++; }
-
+            let lineupData = getOptimalTeamLineup(i);
             rankings.push({
                 teamId: i,
-                name: t.name,
+                name: teams[i].name,
                 isUser: i === userSlot,
-                starterScore: parseFloat(starterScore.toFixed(1)),
-                startersCount: startersCount,
-                qbCount: qbs.length,
-                rbCount: rbs.length,
-                wrCount: wrs.length,
-                teCount: tes.length
+                ...lineupData
             });
         }
 
-        rankings.sort((a,b) => b.starterScore - a.starterScore);
-        let maxScore = rankings[0].starterScore || 1;
+        // Sort by pacing projected lineup PPG
+        rankings.sort((a,b) => b.pacingProjectedLineupPPG - a.pacingProjectedLineupPPG);
+        let maxScore = rankings[0].pacingProjectedLineupPPG || 1;
 
         container.innerHTML = '';
         rankings.forEach((r, idx) => {
-            let pct = Math.max(10, Math.round((r.starterScore / maxScore) * 100));
+            let pct = Math.max(15, Math.round((r.pacingProjectedLineupPPG / maxScore) * 100));
+            let isOpen = (expandedRankTeamId === r.teamId);
+
+            let starterSlotsHTML = Object.values(r.starters).map(s => {
+                let p = s.player;
+                let playerName = p ? `<strong>${p.name}</strong> <span style="color:#64748b;">(${p.team || 'FA'})</span>` : `<span style="color:#64748b; font-style:italic;">Empty (Est. ${s.baseline} PPG)</span>`;
+                let ppgVal = p ? `<strong style="color:#00ff88;">${p.ppg}</strong> PPG` : `<span style="color:#64748b;">${s.baseline}</span>`;
+                return `
+                    <div class="starter-slot-row">
+                        <span class="starter-slot-label">${s.slot}</span>
+                        <span>${playerName}</span>
+                        <span style="text-align: right;">${ppgVal}</span>
+                    </div>
+                `;
+            }).join('');
+
+            let benchHTML = r.bench.length > 0 ? `
+                <div style="margin-top: 6px; font-size: 10px; color: #94a3b8;">
+                    <strong>Bench Depth (${r.bench.length}):</strong> ${r.bench.map(b => `${b.name} (${b.ppg})`).join(', ')}
+                </div>
+            ` : '';
+
             container.innerHTML += `
-                <div class="rank-card ${r.isUser ? 'rank-user' : ''}">
+                <div class="rank-card ${r.isUser ? 'rank-user' : ''}" onclick="toggleRankLineup(${r.teamId})">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <strong style="color:${r.isUser ? '#00f0ff' : '#f8fafc'}">#${idx + 1} ${r.name} ${r.isUser ? '(YOU)' : ''}</strong>
+                            <strong style="color:${r.isUser ? '#00f0ff' : '#f8fafc'}; font-size: 13px;">
+                                #${idx + 1} ${r.name} ${r.isUser ? '⚡ (YOU)' : ''}
+                            </strong>
                             <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">
-                                QBs: ${r.qbCount} | RBs: ${r.rbCount} | WRs: ${r.wrCount} | TEs: ${r.teCount} (${r.startersCount}/11 Starters Drafted)
+                                Starters Drafted: <strong style="color:#38bdf8;">${r.startersCount}/11</strong> | Active Starter Output: <strong style="color:#00ff88;">${r.actualDraftedStarterPPG} PPG</strong>
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <span style="font-size: 15px; font-weight: 800; color: #00ff88;">${r.starterScore}</span>
-                            <span style="font-size: 10px; color: #94a3b8;"> pts/wk</span>
+                            <span style="font-size: 16px; font-weight: 800; color: #00ff88;">${r.pacingProjectedLineupPPG}</span>
+                            <span style="font-size: 10px; color: #94a3b8;"> Proj PPG</span>
+                            <div style="font-size: 9px; color: #38bdf8;">${isOpen ? '▲ Collapse' : '▼ View Lineup'}</div>
                         </div>
                     </div>
                     <div class="rank-bar-bg">
                         <div class="rank-bar-fill" style="width: ${pct}%;"></div>
+                    </div>
+                    <div class="rank-lineup-drilldown ${isOpen ? 'open' : ''}">
+                        ${starterSlotsHTML}
+                        ${benchHTML}
                     </div>
                 </div>
             `;
@@ -1603,7 +1680,8 @@
                     let pObj = players.find(x => x.name === name);
                     let isKp = pObj && pObj.isKeeper ? `<span class="badge badge-keeper">R${pObj.keeperRound} KEEPER</span>` : '';
                     let tm = pObj && pObj.team ? `<span class="badge-team">${pObj.team}</span>` : '';
-                    return `<span class="roster-pill">${name} ${tm} ${isKp}</span>`;
+                    let ppgStr = pObj ? `<span style="color:#00ff88; font-size:10px; font-weight:bold;">${pObj.ppg} PPG</span>` : '';
+                    return `<span class="roster-pill">${name} ${tm} ${ppgStr} ${isKp}</span>`;
                 }).join('')}</div>
             </div>
         `;
