@@ -50,11 +50,8 @@
         .card-val { font-size: 16px; font-weight: bold; color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
         .card-val.on-clock { color: #39ff14; text-shadow: 0 0 10px rgba(57, 255, 20, 0.6); animation: neonPulse 1.5s infinite; }
         
-        /* ALERT BANNER */
+        /* ALERT BANNERS */
         .alert-banner { 
-            background: rgba(255, 0, 85, 0.15); 
-            border: 1px solid #ff0055; 
-            color: #ffccd9; 
             border-radius: 6px; 
             padding: 8px 12px; 
             margin-bottom: 12px; 
@@ -62,7 +59,18 @@
             display: none; 
             align-items: center; 
             justify-content: space-between;
+        }
+        .alert-risk {
+            background: rgba(255, 0, 85, 0.15); 
+            border: 1px solid #ff0055; 
+            color: #ffccd9; 
             box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+        }
+        .alert-opportunity {
+            background: rgba(0, 255, 136, 0.15); 
+            border: 1px solid #00ff88; 
+            color: #ccffea; 
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
         
         /* CONTROLS */
@@ -266,7 +274,7 @@
                 </div>
             </div>
 
-            <!-- ALERT BANNER -->
+            <!-- DYNAMIC ALERT BANNER -->
             <div id="alertBanner" class="alert-banner">
                 <span id="alertText">⚠️ High Run Risk detected ahead of your turn!</span>
             </div>
@@ -398,7 +406,7 @@
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v5';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v6';
 
     let userSlot = 1;
     let currentOverallPick = 1;
@@ -741,66 +749,75 @@
         renderPositionalCliffs();
     }
 
-    /* MULTI-PICK USER TURN LOCATOR */
-    function getUserUpcomingPicks() {
-        let upcoming = null;
-        let subsequent = null;
+    /* REFINED DRAFT GAP FINDER */
+    function getActiveDraftGap() {
         let currentTeam = getTeamAtPick(currentOverallPick);
-
-        if (currentTeam === userSlot && !keepersByPick[currentOverallPick]) {
-            upcoming = currentOverallPick;
+        let isOnClock = (currentTeam === userSlot && !keepersByPick[currentOverallPick]);
+        
+        let targetPick = null;
+        
+        if (isOnClock) {
+            // If on clock, look across the round turn to user's subsequent pick
             let p = currentOverallPick + 1;
             while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
                 if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
-                    subsequent = p;
+                    targetPick = p;
                     break;
                 }
                 p++;
             }
         } else {
+            // If waiting, look ahead to user's next upcoming pick
             let p = currentOverallPick;
             while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
                 if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
-                    if (upcoming === null) {
-                        upcoming = p;
-                    } else if (subsequent === null) {
-                        subsequent = p;
-                        break;
-                    }
+                    targetPick = p;
+                    break;
                 }
                 p++;
             }
         }
-        return { upcoming, subsequent };
-    }
+        
+        if (!targetPick) {
+            targetPick = currentOverallPick + TOTAL_TEAMS;
+        }
 
-    /* POSITIONAL CLIFF VONA ENGINE (TWO-PICK HORIZON) */
-    function calculateVONA() {
-        let { upcoming, subsequent } = getUserUpcomingPicks();
-        
-        let startPick = upcoming || currentOverallPick;
-        let endPick = subsequent || (startPick + TOTAL_TEAMS);
-        
-        // Find all intermediate picks between your current decision and your next turn
-        let gapPicks = [];
-        for (let p = startPick + 1; p < endPick; p++) {
+        // Collect all intervening opponent picks
+        let gapTeamIds = [];
+        let startIndex = isOnClock ? (currentOverallPick + 1) : currentOverallPick;
+        for (let p = startIndex; p < targetPick; p++) {
             if (p <= (TOTAL_TEAMS * MAX_ROUNDS) && !keepersByPick[p]) {
-                gapPicks.push(getTeamAtPick(p));
+                let tId = getTeamAtPick(p);
+                if (tId !== userSlot) {
+                    gapTeamIds.push(tId);
+                }
             }
         }
 
-        let demand = { 'QB': 0, 'RB': 0, 'WR': 0, 'TE': 0, 'K': 0, 'DEF': 0 };
-        let criticalQBTeams = 0;
+        return { isOnClock, targetPick, gapTeamIds };
+    }
 
-        gapPicks.forEach(tId => {
+    /* POSITIONAL CLIFF VONA ENGINE (OPPONENT RUN TRACKER) */
+    function calculateVONA() {
+        let { isOnClock, targetPick, gapTeamIds } = getActiveDraftGap();
+
+        let demand = { 'QB': 0, 'RB': 0, 'WR': 0, 'TE': 0, 'K': 0, 'DEF': 0 };
+        let opponentsWithZeroQB = new Set();
+
+        gapTeamIds.forEach(tId => {
             let t = teams[tId];
             let qbCount = t.roster.QB.length;
             let rbCount = t.roster.RB.length;
             let wrCount = t.roster.WR.length;
 
-            if (qbCount === 0) { demand.QB += 0.8; criticalQBTeams++; }
-            else if (qbCount === 1) demand.QB += 0.4;
-            else if (qbCount === 2) demand.QB += 0.05;
+            if (qbCount === 0) { 
+                demand.QB += 0.8; 
+                opponentsWithZeroQB.add(tId);
+            } else if (qbCount === 1) {
+                demand.QB += 0.4;
+            } else if (qbCount === 2) {
+                demand.QB += 0.05;
+            }
 
             if (rbCount < 2) demand.RB += 0.8;
             else if (rbCount < 4) demand.RB += 0.4;
@@ -824,31 +841,43 @@
             vonaValues[pos] = Math.max(0, parseFloat((bestNow - nextAvailable).toFixed(2)));
         });
 
-        // Dynamic Scarcity Run Alert
+        // Smart Alert System based on user's own roster need
+        let userQBCount = teams[userSlot].roster.QB.length;
+        let criticalOpponents = opponentsWithZeroQB.size;
         let alert = document.getElementById('alertBanner');
         let alertText = document.getElementById('alertText');
-        if (criticalQBTeams >= 3 && gapPicks.length > 0) {
+
+        alert.className = 'alert-banner';
+
+        if (criticalOpponents >= 2 && gapTeamIds.length > 0) {
             alert.style.display = 'flex';
-            alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalQBTeams} teams drafting before your next turn have 0 QBs!`;
+            if (userQBCount < 2) {
+                alert.classList.add('alert-risk');
+                alertText.innerHTML = `⚠️ <strong>HIGH QB RUN RISK:</strong> ${criticalOpponents} opponents drafting before your turn have 0 QBs!`;
+            } else {
+                alert.classList.add('alert-opportunity');
+                alertText.innerHTML = `💡 <strong>QB RUN DETECTED:</strong> ${criticalOpponents} opponents need QBs — top WR/RBs will fall to you!`;
+            }
         } else if (vonaValues.WR >= 18.0) {
             alert.style.display = 'flex';
-            alertText.innerHTML = `⚠️ <strong>STEEP WR CLIFF:</strong> Projected loss of ${vonaValues.WR} pts at WR before your next turn!`;
+            alert.classList.add('alert-risk');
+            alertText.innerHTML = `⚠️ <strong>STEEP WR CLIFF:</strong> Projected drop of ${vonaValues.WR} pts at WR before your next turn!`;
         } else {
             alert.style.display = 'none';
         }
 
-        return { vonaValues, upcoming, subsequent };
+        return { vonaValues, targetPick };
     }
 
     /* RENDER POSITIONAL CLIFFS IN SIDEBAR */
     function renderPositionalCliffs() {
         let container = document.getElementById('cliffGridContainer');
         let horizonLabel = document.getElementById('cliffHorizonLabel');
-        let { vonaValues, upcoming, subsequent } = calculateVONA();
+        let { vonaValues, targetPick } = calculateVONA();
         let positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'];
 
-        if (subsequent) {
-            horizonLabel.innerText = `To Pick ${formatPick(subsequent)}`;
+        if (targetPick) {
+            horizonLabel.innerText = `To Pick ${formatPick(targetPick)}`;
         } else {
             horizonLabel.innerText = `Loss If Passed`;
         }
@@ -867,16 +896,16 @@
     }
 
     function renderTopTargets() {
-        let { upcoming } = getUserUpcomingPicks();
-        let targetPick = upcoming || currentOverallPick;
-        document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(targetPick)}`;
+        let { targetPick } = getActiveDraftGap();
+        let nextPickDisplay = targetPick || currentOverallPick;
+        document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(nextPickDisplay)}`;
 
         let userRoster = teams[userSlot].roster;
         let { vonaValues } = calculateVONA();
 
         let candidates = players.filter(p => !p.drafted).map(p => {
             let needMultiplier = 1.0;
-            let currentRound = Math.floor((targetPick - 1) / TOTAL_TEAMS) + 1;
+            let currentRound = Math.floor((nextPickDisplay - 1) / TOTAL_TEAMS) + 1;
 
             if (p.pos === 'QB') {
                 if (userRoster.QB.length === 0) needMultiplier = 1.35;
@@ -979,10 +1008,11 @@
             teamDisp.innerHTML = `${teams[currentTeamId].name} is on the clock`;
         }
 
-        let { upcoming } = getUserUpcomingPicks();
-        let nextPick = upcoming || currentOverallPick;
-        let gap = nextPick - currentOverallPick;
-        nextDisp.innerHTML = `Pick ${formatPick(nextPick)}`;
+        let { isOnClock, targetPick } = getActiveDraftGap();
+        let displayTarget = isOnClock ? currentOverallPick : targetPick;
+        let gap = displayTarget - currentOverallPick;
+
+        nextDisp.innerHTML = `Pick ${formatPick(displayTarget)}`;
         gapDisp.innerHTML = (currentTeamId === userSlot && !keepersByPick[currentOverallPick]) ? `Your current pick` : `${gap} pick${gap > 1 ? 's' : ''} away`;
     }
 
