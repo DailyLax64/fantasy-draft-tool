@@ -29,9 +29,9 @@ def fetch_live_depth_and_teams():
         print(f"Warning: Could not fetch Sleeper API: {e}")
     return {}
 
-# 276 Consensus Projections Dataset (with Quinshon Judkins, Ks, and DSTs)
+# 276 Consensus Projections Dataset
 BASE_PLAYERS = [
-    # === QUARTERBACKS ===
+    # === 40 QUARTERBACKS ===
     { "name": "Josh Allen", "pos": "QB", "team": "BUF", "depth": "QB1", "passYds": 3800, "passTd": 28, "int": 11, "rushYds": 540, "rushTd": 10, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Lamar Jackson", "pos": "QB", "team": "BAL", "depth": "QB1", "passYds": 3500, "passTd": 27, "int": 8, "rushYds": 720, "rushTd": 5, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Drake Maye", "pos": "QB", "team": "NE", "depth": "QB1", "passYds": 4050, "passTd": 28, "int": 10, "rushYds": 480, "rushTd": 4, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
@@ -56,7 +56,7 @@ BASE_PLAYERS = [
     { "name": "Bryce Young", "pos": "QB", "team": "CAR", "depth": "QB1", "passYds": 3450, "passTd": 21, "int": 11, "rushYds": 230, "rushTd": 2, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Geno Smith", "pos": "QB", "team": "SEA", "depth": "QB1", "passYds": 3600, "passTd": 21, "int": 11, "rushYds": 180, "rushTd": 1, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Tua Tagovailoa", "pos": "QB", "team": "MIA", "depth": "QB1", "passYds": 3750, "passTd": 24, "int": 12, "rushYds": 50, "rushTd": 0, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
-    { "name": "Aaron Rodgers", "pos": "QB", "team": "NYJ", "depth": "QB1", "passYds": 3450, "passTd": 22, "int: 9, "rushYds": 40, "rushTd": 0, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
+    { "name": "Aaron Rodgers", "pos": "QB", "team": "NYJ", "depth": "QB1", "passYds": 3450, "passTd": 22, "int": 9, "rushYds": 40, "rushTd": 0, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Cam Ward", "pos": "QB", "team": "TEN", "depth": "QB1", "passYds": 3350, "passTd": 20, "int": 12, "rushYds": 260, "rushTd": 3, "rec": 0, "recYds": 0, "recTd": 0, "fum": 3 },
     { "name": "Kirk Cousins", "pos": "QB", "team": "ATL", "depth": "QB1", "passYds": 3400, "passTd": 21, "int": 11, "rushYds": 30, "rushTd": 0, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Daniel Jones", "pos": "QB", "team": "IND", "depth": "QB1", "passYds": 3150, "passTd": 17, "int": 10, "rushYds": 320, "rushTd": 2, "rec": 0, "recYds": 0, "recTd": 0, "fum": 3 },
@@ -73,13 +73,13 @@ BASE_PLAYERS = [
     { "name": "Aidan O'Connell", "pos": "QB", "team": "LV", "depth": "QB3", "passYds": 2850, "passTd": 14, "int": 9, "rushYds": 40, "rushTd": 0, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
     { "name": "Drew Lock", "pos": "QB", "team": "NYG", "depth": "QB2", "passYds": 2700, "passTd": 14, "int": 10, "rushYds": 90, "rushTd": 1, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2 },
 
-    # === RUNNING BACKS ===
+    # === 76 RUNNING BACKS ===
     { "name": "Jahmyr Gibbs", "pos": "RB", "team": "DET", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1480, "rushTd": 14, "rec": 73, "recYds": 650, "recTd": 6, "fum": 2 },
     { "name": "Bijan Robinson", "pos": "RB", "team": "ATL", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1630, "rushTd": 12, "rec": 74, "recYds": 650, "recTd": 5, "fum": 2 },
     { "name": "James Cook III", "pos": "RB", "team": "BUF", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1560, "rushTd": 12, "rec": 32, "recYds": 280, "recTd": 4, "fum": 1 },
     { "name": "Saquon Barkley", "pos": "RB", "team": "PHI", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1460, "rushTd": 13, "rec": 30, "recYds": 260, "recTd": 3, "fum": 2 },
     { "name": "Jonathan Taylor", "pos": "RB", "team": "IND", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1370, "rushTd": 13, "rec": 38, "recYds": 290, "recTd": 2, "fum": 2 },
-    { "name": "Omarion Hampton", "pos": "RB", "team": "DAL", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1240, "rushTd": 10, "rec": 62, "recYds": 440, "recTd": 3, "fum": 2 },
+    { "name": "Omarion Hampton", "pos": "RB", "team": "DAL", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1240, "rushTd": 10, "rec": 62, "recYds": 440, "recTd: 3", "fum": 2 },
     { "name": "Kenneth Walker III", "pos": "RB", "team": "SEA", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1290, "rushTd": 11, "rec": 44, "recYds": 350, "recTd": 2, "fum": 2 },
     { "name": "Ashton Jeanty", "pos": "RB", "team": "LV", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 1230, "rushTd": 9, "rec": 65, "recYds": 520, "recTd": 2, "fum": 2 },
     { "name": "Quinshon Judkins", "pos": "RB", "team": "CLE", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 860, "rushTd": 7, "rec": 28, "recYds": 210, "recTd": 1, "fum": 1 },
@@ -95,7 +95,7 @@ BASE_PLAYERS = [
     { "name": "David Montgomery", "pos": "RB", "team": "DET", "depth": "RB2", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 880, "rushTd": 8, "rec": 28, "recYds": 210, "recTd": 1, "fum": 1 },
     { "name": "Rachaad White", "pos": "RB", "team": "TB", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 820, "rushTd": 6, "rec": 55, "recYds": 420, "recTd": 2, "fum": 1 },
     { "name": "Alvin Kamara", "pos": "RB", "team": "NO", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 780, "rushTd": 5, "rec": 68, "recYds": 490, "recTd": 3, "fum": 2 },
-    { "name": "Tony Pollard", "pos": "RB", "team": "TEN", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 890, "rushTd": 6, "rec": 42, "recYds": 310, "recTd": 1, "fum: 1 },
+    { "name": "Tony Pollard", "pos": "RB", "team": "TEN", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 890, "rushTd": 6, "rec": 42, "recYds": 310, "recTd": 1, "fum": 1 },
     { "name": "Brian Robinson Jr.", "pos": "RB", "team": "WAS", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 850, "rushTd": 7, "rec": 25, "recYds": 190, "recTd": 1, "fum": 1 },
     { "name": "Jonathon Brooks", "pos": "RB", "team": "CAR", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 860, "rushTd": 6, "rec": 35, "recYds": 270, "recTd": 2, "fum": 1 },
     { "name": "Trey Benson", "pos": "RB", "team": "ARI", "depth": "RB1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 790, "rushTd": 6, "rec": 30, "recYds": 240, "recTd": 1, "fum": 1 },
@@ -151,7 +151,7 @@ BASE_PLAYERS = [
     { "name": "Trayveon Williams", "pos": "RB", "team": "CIN", "depth": "RB3", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 180, "rushTd": 1, "rec": 10, "recYds": 60, "recTd": 0, "fum": 0 },
     { "name": "Sean Tucker", "pos": "RB", "team": "TB", "depth": "RB4", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 210, "rushTd": 1, "rec": 12, "recYds": 80, "recTd": 0, "fum": 0 },
 
-    # === WIDE RECEIVERS ===
+    # === 100 WIDE RECEIVERS ===
     { "name": "Jaxon Smith-Njigba", "pos": "WR", "team": "SEA", "depth": "WR1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 30, "rushTd": 0, "rec": 111, "recYds": 1568, "recTd": 9, "fum": 1 },
     { "name": "Puka Nacua", "pos": "WR", "team": "LAR", "depth": "WR1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 106, "rushTd": 1, "rec": 123, "recYds": 1590, "recTd": 10, "fum": 1 },
     { "name": "Ja'Marr Chase", "pos": "WR", "team": "CIN", "depth": "WR1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 40, "rushTd": 0, "rec": 121, "recYds": 1512, "recTd": 11, "fum": 1 },
@@ -253,7 +253,7 @@ BASE_PLAYERS = [
     { "name": "Lil'Jordan Humphrey", "pos": "WR", "team": "DEN", "depth": "WR4", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 24, "recYds": 280, "recTd": 2, "fum": 0 },
     { "name": "David Moore", "pos": "WR", "team": "CAR", "depth": "WR2", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 22, "recYds": 270, "recTd": 1, "fum": 0 },
 
-    # === TIGHT ENDS ===
+    # === 20 TIGHT ENDS ===
     { "name": "Trey McBride", "pos": "TE", "team": "ARI", "depth": "TE1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 109, "recYds": 1120, "recTd": 6, "fum": 1 },
     { "name": "Brock Bowers", "pos": "TE", "team": "LV", "depth": "TE1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 20, "rushTd": 0, "rec": 96, "recYds": 1080, "recTd": 8, "fum": 1 },
     { "name": "George Kittle", "pos": "TE", "team": "SF", "depth": "TE1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 75, "recYds": 940, "recTd": 7, "fum": 1 },
@@ -275,7 +275,7 @@ BASE_PLAYERS = [
     { "name": "Isaiah Likely", "pos": "TE", "team": "BAL", "depth": "TE2", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 42, "recYds": 480, "recTd": 5, "fum": 1 },
     { "name": "Tyler Conklin", "pos": "TE", "team": "NYJ", "depth": "TE1", "passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 48, "recYds": 460, "recTd": 2, "fum": 1 },
 
-    # === KICKERS ===
+    # === 20 KICKERS ===
     { "name": "Brandon Aubrey", "pos": "K", "team": "DAL", "depth": "K1", "fgYds": 1450, "pat": 44 },
     { "name": "Harrison Butker", "pos": "K", "team": "KC", "depth": "K1", "fgYds": 1280, "pat": 46 },
     { "name": "Justin Tucker", "pos": "K", "team": "BAL", "depth": "K1", "fgYds": 1320, "pat": 42 },
@@ -297,7 +297,7 @@ BASE_PLAYERS = [
     { "name": "Blake Grupe", "pos": "K", "team": "NO", "depth": "K1", "fgYds": 1090, "pat": 34 },
     { "name": "Dustin Hopkins", "pos": "K", "team": "CLE", "depth": "K1", "fgYds": 1080, "pat": 31 },
 
-    # === DEFENSES / SPECIAL TEAMS ===
+    # === 20 DEFENSES / SPECIAL TEAMS ===
     { "name": "Baltimore Ravens DEF", "pos": "DEF", "team": "BAL", "depth": "DST", "pts": 128 },
     { "name": "San Francisco 49ers DEF", "pos": "DEF", "team": "SF", "depth": "DST", "pts": 124 },
     { "name": "New York Jets DEF", "pos": "DEF", "team": "NYJ", "depth": "DST", "pts": 122 },
