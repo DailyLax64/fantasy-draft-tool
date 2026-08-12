@@ -12,16 +12,16 @@
             margin: 0; 
             padding: 14px 16px; 
         }
-        .container { max-width: 1600px; margin: 0 auto; }
+        .container { max-width: 1650px; margin: 0 auto; }
         
         /* TWO-COLUMN FULL-HEIGHT LAYOUT */
         .layout-grid { 
             display: grid; 
-            grid-template-columns: 1fr 340px; 
+            grid-template-columns: 1fr 350px; 
             gap: 16px; 
             align-items: start; 
         }
-        @media (max-width: 1050px) { 
+        @media (max-width: 1100px) { 
             .layout-grid { grid-template-columns: 1fr; } 
         }
 
@@ -99,6 +99,8 @@
         .btn-undo:hover { background: #334155; }
         .btn-action { background: #0a0f24; cursor: pointer; border: 1px solid #00f0ff; color: #00f0ff; font-weight: 600; }
         .btn-action:hover { background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
+        .btn-rankings { background: #0a0f24; cursor: pointer; border: 1px solid #ffe600; color: #ffe600; font-weight: bold; }
+        .btn-rankings:hover { background: rgba(255, 230, 0, 0.15); box-shadow: 0 0 8px rgba(255, 230, 0, 0.4); }
         .btn-reset { background: rgba(255, 0, 85, 0.15); cursor: pointer; border: 1px solid #ff0055; color: #ff0055; font-weight: bold; }
         .btn-reset:hover { background: #ff0055; color: #fff; box-shadow: 0 0 8px rgba(255, 0, 85, 0.6); }
         
@@ -133,6 +135,20 @@
         .badge-depth-TE { background: rgba(255, 170, 0, 0.15); color: #ffaa00; border: 1px solid #ffaa00; box-shadow: 0 0 6px rgba(255, 170, 0, 0.4); }
         .badge-depth-K  { background: rgba(176, 38, 255, 0.15); color: #b026ff; border: 1px solid #b026ff; box-shadow: 0 0 6px rgba(176, 38, 255, 0.4); }
         .badge-depth-DEF{ background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid #6366f1; box-shadow: 0 0 6px rgba(99, 102, 241, 0.4); }
+        
+        /* ANALYTICAL INSIGHT BADGES */
+        .badge-tier-ender { background: #ff0055; color: #fff; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 3px; animation: neonPulse 1.2s infinite; box-shadow: 0 0 8px rgba(255, 0, 85, 0.6); }
+        .badge-tier-count { background: #1e294d; color: #f8fafc; font-size: 9px; font-weight: 700; padding: 2px 4px; border-radius: 3px; border: 1px solid #38bdf8; }
+        .badge-stack { background: rgba(255, 230, 0, 0.2); color: #ffe600; border: 1px solid #ffe600; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 3px; box-shadow: 0 0 6px rgba(255, 230, 0, 0.4); }
+        .badge-upside { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; font-size: 9px; font-weight: 800; padding: 2px 4px; border-radius: 3px; }
+        .badge-bye { background: #141b3a; color: #94a3b8; font-size: 9px; padding: 2px 4px; border-radius: 3px; }
+        .badge-bye-conflict { background: rgba(255, 0, 85, 0.2); color: #ff3366; border: 1px solid #ff0055; font-size: 9px; font-weight: bold; padding: 2px 4px; border-radius: 3px; }
+        
+        /* SURVIVAL PILL */
+        .pill-survive { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .survive-high { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; }
+        .survive-med { background: rgba(255, 170, 0, 0.15); color: #ffaa00; border: 1px solid #ffaa00; }
+        .survive-low { background: rgba(255, 0, 85, 0.15); color: #ff0055; border: 1px solid #ff0055; }
         
         .badge-team { background: #141b3a; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; border: 1px solid #1e294d; }
         .badge-keeper { background: #ffe600; color: #050814; font-size: 9px; margin-left: 4px; font-weight: 800; box-shadow: 0 0 6px rgba(255, 230, 0, 0.6); }
@@ -208,7 +224,7 @@
         .target-card:hover { border-color: #00f0ff; box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
         .target-rank { font-size: 13px; font-weight: 800; color: #94a3b8; margin-right: 6px; }
         .target-name { font-size: 13px; font-weight: bold; color: #f8fafc; }
-        .target-stats { font-size: 10px; color: #94a3b8; }
+        .target-stats { font-size: 10px; color: #94a3b8; margin-top: 2px; }
         
         /* DRAFT FEED */
         .feed-container { max-height: 36vh; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding-right: 2px; }
@@ -219,8 +235,14 @@
         
         /* MODALS */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
-        .modal-content { background: #0a0f24; border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); padding: 18px; border-radius: 8px; max-width: 620px; width: 92%; max-height: 85vh; overflow-y: auto; }
+        .modal-content { background: #0a0f24; border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.2); padding: 18px; border-radius: 8px; max-width: 680px; width: 92%; max-height: 85vh; overflow-y: auto; }
         
+        /* POWER RANKINGS MODAL STYLING */
+        .rank-card { background: #050814; border: 1px solid #1e294d; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; }
+        .rank-card.rank-user { border-color: #00f0ff; background: rgba(0, 240, 255, 0.05); }
+        .rank-bar-bg { background: #141b3a; height: 6px; border-radius: 3px; margin: 6px 0; overflow: hidden; }
+        .rank-bar-fill { background: linear-gradient(90deg, #00d4ff, #00ff88); height: 100%; }
+
         /* ACCORDION ROSTER */
         .accordion-header { background: #050814; padding: 10px; border-radius: 6px; border: 1px solid #1e294d; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; user-select: none; }
         .accordion-header:hover { border-color: #00f0ff; }
@@ -291,9 +313,10 @@
                     <button class="btn-filter" onclick="setPosFilter('DEF')">DEF</button>
                 </div>
                 <div class="btn-group">
-                    <input type="text" id="searchInput" placeholder="Search player, team, depth..." onkeyup="renderTable()" style="min-width: 180px;">
+                    <input type="text" id="searchInput" placeholder="Search player, team, depth..." onkeyup="renderTable()" style="min-width: 160px;">
                     <button class="btn-action" onclick="showTeamNamesModal()">⚙️ Teams</button>
                     <button class="btn-action" onclick="showKeepersModal()">🔒 Keepers</button>
+                    <button class="btn-rankings" onclick="showRankingsModal()">🏆 Power Rankings</button>
                     <button class="btn-action" onclick="showRostersModal()">📋 Rosters</button>
                     <button class="btn-undo" onclick="undoLastPick()">↩ Undo</button>
                     <button class="btn-reset" onclick="resetDraft()">🗑️ Reset</button>
@@ -311,6 +334,7 @@
                             <th>Depth</th>
                             <th>Custom Pts</th>
                             <th>VORP</th>
+                            <th>Survival %</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -350,6 +374,16 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- STARTING LINEUP POWER RANKINGS MODAL -->
+<div id="rankingsModal" class="modal" onclick="closeModal(event, 'rankingsModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 style="color: #ffe600; margin-top: 0; font-size: 17px;">🏆 Starting Lineup Power Rankings</h2>
+        <p style="font-size: 11px; color: #94a3b8; margin-bottom: 12px;">Live projected starting firepower (1 QB, 2 RB, 3 WR, 1 TE, 1 SFLEX, 1 FLEX, 1 K, 1 DEF):</p>
+        <div id="rankingsList"></div>
+        <button style="margin-top: 12px; width: 100%; background: #1e294d; border: none; padding: 7px; cursor: pointer; color:#fff;" onclick="document.getElementById('rankingsModal').style.display='none'">Close</button>
     </div>
 </div>
 
@@ -406,7 +440,20 @@
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v6';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v8';
+
+    // 2026 OFFICIAL NFL BYE WEEKS
+    const BYE_WEEKS = {
+        'CAR': 5, 'KC': 5,
+        'CIN': 6, 'DET': 6, 'MIA': 6, 'MIN': 6,
+        'BUF': 7, 'JAX': 7, 'LAC': 7, 'WAS': 7,
+        'HOU': 8, 'NO': 8, 'NYG': 8, 'SF': 8,
+        'PIT': 9, 'TEN': 9,
+        'CHI': 10, 'DEN': 10, 'PHI': 10, 'TB': 10,
+        'ATL': 11, 'CLE': 11, 'GB': 11, 'LAR': 11, 'NE': 11, 'SEA': 11,
+        'BAL': 13, 'IND': 13, 'LV': 13, 'NYJ': 13,
+        'ARI': 14, 'DAL': 14
+    };
 
     let userSlot = 1;
     let currentOverallPick = 1;
@@ -448,7 +495,6 @@
             draftHistory = state.draftHistory || [];
             keepersByPick = state.keepersByPick || {};
 
-            // Re-apply keeper status to master player objects
             Object.values(keepersByPick).forEach(k => {
                 let p = players.find(x => x.name === k.player.name);
                 if (p) {
@@ -460,7 +506,6 @@
                 }
             });
 
-            // Re-apply drafted status from history
             draftHistory.forEach(item => {
                 let p = players.find(x => x.name === item.player.name);
                 if (p) p.drafted = true;
@@ -749,15 +794,13 @@
         renderPositionalCliffs();
     }
 
-    /* REFINED DRAFT GAP FINDER */
+    /* REFINED DRAFT GAP & DEMAND FINDER */
     function getActiveDraftGap() {
         let currentTeam = getTeamAtPick(currentOverallPick);
         let isOnClock = (currentTeam === userSlot && !keepersByPick[currentOverallPick]);
-        
         let targetPick = null;
         
         if (isOnClock) {
-            // If on clock, look across the round turn to user's subsequent pick
             let p = currentOverallPick + 1;
             while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
                 if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
@@ -767,7 +810,6 @@
                 p++;
             }
         } else {
-            // If waiting, look ahead to user's next upcoming pick
             let p = currentOverallPick;
             while (p <= TOTAL_TEAMS * MAX_ROUNDS) {
                 if (getTeamAtPick(p) === userSlot && !keepersByPick[p]) {
@@ -782,7 +824,6 @@
             targetPick = currentOverallPick + TOTAL_TEAMS;
         }
 
-        // Collect all intervening opponent picks
         let gapTeamIds = [];
         let startIndex = isOnClock ? (currentOverallPick + 1) : currentOverallPick;
         for (let p = startIndex; p < targetPick; p++) {
@@ -797,7 +838,7 @@
         return { isOnClock, targetPick, gapTeamIds };
     }
 
-    /* POSITIONAL CLIFF VONA ENGINE (OPPONENT RUN TRACKER) */
+    /* POSITIONAL CLIFF VONA ENGINE */
     function calculateVONA() {
         let { isOnClock, targetPick, gapTeamIds } = getActiveDraftGap();
 
@@ -841,7 +882,7 @@
             vonaValues[pos] = Math.max(0, parseFloat((bestNow - nextAvailable).toFixed(2)));
         });
 
-        // Smart Alert System based on user's own roster need
+        // Run Risk Banner
         let userQBCount = teams[userSlot].roster.QB.length;
         let criticalOpponents = opponentsWithZeroQB.size;
         let alert = document.getElementById('alertBanner');
@@ -866,7 +907,120 @@
             alert.style.display = 'none';
         }
 
-        return { vonaValues, targetPick };
+        return { vonaValues, targetPick, demand };
+    }
+
+    /* MATHEMATICAL SNIPE PROBABILITY / SURVIVAL RATE */
+    function getSurvivalProbability(player, demandMap) {
+        let expectedDemand = demandMap[player.pos] || 0.5;
+        if (expectedDemand <= 0.05) return 99;
+
+        let availableSamePos = players
+            .filter(p => !p.drafted && p.pos === player.pos)
+            .sort((a,b) => b.vorp - a.vorp);
+        
+        let rankAtPos = availableSamePos.findIndex(p => p.name === player.name) + 1;
+        if (rankAtPos <= 0) return 1;
+
+        // Cumulative Poisson probability P(X < rankAtPos)
+        let prob = 0.0;
+        for (let k = 0; k < rankAtPos; k++) {
+            let term = Math.pow(expectedDemand, k) * Math.exp(-expectedDemand) / factorial(k);
+            prob += term;
+        }
+
+        return Math.min(99, Math.max(1, Math.round(prob * 100)));
+    }
+
+    function factorial(n) {
+        if (n <= 1) return 1;
+        let res = 1;
+        for (let i = 2; i <= n; i++) res *= i;
+        return res;
+    }
+
+    /* DYNAMIC TIER CALCULATION */
+    function getPlayerTierInfo(player) {
+        let tierCutoffs = {
+            'QB': [300, 250, 200, 160],
+            'RB': [220, 175, 140, 100],
+            'WR': [200, 165, 130, 95],
+            'TE': [150, 120, 95, 75],
+            'K':  [140, 120],
+            'DEF':[120, 105]
+        };
+        let cuts = tierCutoffs[player.pos] || [200, 150, 100];
+        let tier = 1;
+        for (let i = 0; i < cuts.length; i++) {
+            if (player.pts < cuts[i]) tier = i + 2;
+            else break;
+        }
+
+        // Count how many available players are in this exact tier
+        let countInTier = players.filter(p => {
+            if (p.drafted || p.pos !== player.pos) return false;
+            let pTier = 1;
+            for (let i = 0; i < cuts.length; i++) {
+                if (p.pts < cuts[i]) pTier = i + 2;
+                else break;
+            }
+            return pTier === tier;
+        }).length;
+
+        return { tier, countInTier };
+    }
+
+    /* SUPERFLEX STACKING DETECTOR */
+    function getStackInfo(player) {
+        let userRoster = teams[userSlot].roster;
+        if (!player.team || player.team === 'FA') return null;
+
+        if (player.pos === 'QB') {
+            // Check if user has WR or TE from this team
+            let passCatchers = [...userRoster.WR, ...userRoster.TE];
+            let matched = passCatchers.some(name => {
+                let p = players.find(x => x.name === name);
+                return p && p.team === player.team;
+            });
+            if (matched) return `⚡ ${player.team} STACK`;
+        } else if (player.pos === 'WR' || player.pos === 'TE') {
+            // Check if user has QB from this team
+            let matched = userRoster.QB.some(name => {
+                let p = players.find(x => x.name === name);
+                return p && p.team === player.team;
+            });
+            if (matched) return `⚡ ${player.team} STACK`;
+        }
+        return null;
+    }
+
+    /* BYE WEEK CONFLICT DETECTOR */
+    function getByeWeekStatus(player) {
+        let playerBye = BYE_WEEKS[player.team] || null;
+        if (!playerBye) return { bye: null, isConflict: false };
+
+        let userRoster = teams[userSlot].roster;
+        let isConflict = false;
+
+        // QB Superflex Bye conflicts are especially critical
+        if (player.pos === 'QB' && userRoster.QB.length > 0) {
+            let primaryQBName = userRoster.QB[0];
+            let primaryQB = players.find(x => x.name === primaryQBName);
+            if (primaryQB && BYE_WEEKS[primaryQB.team] === playerBye) {
+                isConflict = true;
+            }
+        }
+
+        return { bye: playerBye, isConflict };
+    }
+
+    /* CONTINGENT VALUE / HANDCUFF DETECTOR */
+    function isUpsideHandcuff(player, currentPick) {
+        let round = Math.floor((currentPick - 1) / TOTAL_TEAMS) + 1;
+        if (round >= 10 && player.pos === 'RB' && (player.depth === 'RB2' || player.depth === 'RB3')) {
+            return true;
+        }
+        return false;
     }
 
     /* RENDER POSITIONAL CLIFFS IN SIDEBAR */
@@ -901,7 +1055,7 @@
         document.getElementById('targetNextPickLabel').innerText = `Pick ${formatPick(nextPickDisplay)}`;
 
         let userRoster = teams[userSlot].roster;
-        let { vonaValues } = calculateVONA();
+        let { vonaValues, demand } = calculateVONA();
 
         let candidates = players.filter(p => !p.drafted).map(p => {
             let needMultiplier = 1.0;
@@ -918,11 +1072,15 @@
             } else if (p.pos === 'TE') {
                 if (userRoster.TE.length >= 1) needMultiplier = 0.60;
             } else if (p.pos === 'K' || p.pos === 'DEF') {
-                if (currentRound < 13) needMultiplier = 0.20;
+                if (currentRound < 14) needMultiplier = 0.20;
             }
 
-            let targetScore = (p.vorp * needMultiplier) + ((vonaValues[p.pos] || 0) * 0.4);
-            return { player: p, targetScore: targetScore };
+            let stackTag = getStackInfo(p);
+            let stackMultiplier = stackTag ? 1.12 : 1.0; // 6-pt pass TD correlation boost
+            let handcuffBoost = isUpsideHandcuff(p, nextPickDisplay) ? 1.15 : 1.0;
+
+            let targetScore = ((p.vorp * needMultiplier * stackMultiplier * handcuffBoost) + ((vonaValues[p.pos] || 0) * 0.4));
+            return { player: p, targetScore: targetScore, stackTag };
         });
 
         candidates.sort((a, b) => b.targetScore - a.targetScore);
@@ -934,13 +1092,34 @@
         top3.forEach((item, idx) => {
             let p = item.player;
             let depthDisplay = p.depth || p.pos;
+            let survivalPct = getSurvivalProbability(p, demand);
+            let survivalClass = survivalPct >= 70 ? 'survive-high' : (survivalPct >= 35 ? 'survive-med' : 'survive-low');
+            let tierInfo = getPlayerTierInfo(p);
+            let tierBadge = tierInfo.countInTier === 1 
+                ? `<span class="badge-tier-ender">🔥 T${tierInfo.tier} ENDER</span>` 
+                : `<span class="badge-tier-count">T${tierInfo.tier}</span>`;
+            let stackBadge = item.stackTag ? `<span class="badge-stack">${item.stackTag}</span>` : '';
+            let byeStatus = getByeWeekStatus(p);
+            let byeBadge = byeStatus.isConflict 
+                ? `<span class="badge-bye-conflict">⚠️ Wk ${byeStatus.bye} Bye Conflict</span>` 
+                : (byeStatus.bye ? `<span class="badge-bye">Bye ${byeStatus.bye}</span>` : '');
+
             container.innerHTML += `
                 <div class="target-card">
                     <div style="display: flex; align-items: center;">
                         <span class="target-rank">#${idx + 1}</span>
                         <div>
-                            <div class="target-name">${p.name} <span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span></div>
-                            <div class="target-stats">${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong></div>
+                            <div class="target-name">
+                                ${p.name} 
+                                <span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span>
+                                ${tierBadge}
+                                ${stackBadge}
+                            </div>
+                            <div class="target-stats">
+                                ${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong>
+                                <span class="pill-survive ${survivalClass}" style="margin-left: 4px;">${survivalPct}% Survive</span>
+                                ${byeBadge ? `<div style="margin-top:2px;">${byeBadge}</div>` : ''}
+                            </div>
                         </div>
                     </div>
                     <button class="btn-draft" onclick="draftPlayer('${p.name.replace(/'/g, "\\'")}')">Draft</button>
@@ -1081,6 +1260,8 @@
         let search = document.getElementById('searchInput').value.toLowerCase().trim();
         tbody.innerHTML = '';
 
+        let { demand } = calculateVONA();
+
         let available = players
             .filter(p => !p.drafted)
             .filter(p => currentPosFilter === 'ALL' || p.pos === currentPosFilter)
@@ -1096,20 +1277,146 @@
         available.forEach((p, index) => {
             let vorpClass = p.vorp >= 0 ? 'vorp-positive' : 'vorp-negative';
             let depthDisplay = p.depth || p.pos;
+            let survivalPct = getSurvivalProbability(p, demand);
+            let survivalClass = survivalPct >= 70 ? 'survive-high' : (survivalPct >= 35 ? 'survive-med' : 'survive-low');
+            
+            let tierInfo = getPlayerTierInfo(p);
+            let tierBadge = tierInfo.countInTier === 1 
+                ? `<span class="badge-tier-ender">🔥 T${tierInfo.tier} ENDER</span>` 
+                : (tierInfo.countInTier === 2 ? `<span class="badge-tier-count">⏳ 2 in T${tierInfo.tier}</span>` : `<span class="badge-tier-count">T${tierInfo.tier}</span>`);
+
+            let stackTag = getStackInfo(p);
+            let stackBadge = stackTag ? `<span class="badge-stack">${stackTag}</span>` : '';
+            let upsideBadge = isUpsideHandcuff(p, currentOverallPick) ? `<span class="badge-upside">🚀 Handcuff</span>` : '';
+            let byeStatus = getByeWeekStatus(p);
+            let byeBadge = byeStatus.isConflict 
+                ? `<span class="badge-bye-conflict">⚠️ Wk ${byeStatus.bye} Conflict</span>` 
+                : (byeStatus.bye ? `<span class="badge-bye">Bye ${byeStatus.bye}</span>` : '');
 
             let row = `
                 <tr>
                     <td>#${index + 1}</td>
-                    <td><strong>${p.name}</strong></td>
+                    <td>
+                        <strong>${p.name}</strong> 
+                        ${tierBadge}
+                        ${stackBadge}
+                        ${upsideBadge}
+                        ${byeBadge}
+                    </td>
                     <td><span class="badge-team">${p.team || 'FA'}</span></td>
                     <td><span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span></td>
                     <td>${p.pts}</td>
                     <td class="${vorpClass}">${p.vorp > 0 ? '+' + p.vorp : p.vorp}</td>
+                    <td><span class="pill-survive ${survivalClass}">${survivalPct}%</span></td>
                     <td><button class="btn-draft" onclick="draftPlayer('${p.name.replace(/'/g, "\\'")}')">Draft</button></td>
                 </tr>
             `;
             tbody.innerHTML += row;
         });
+    }
+
+    /* REAL-TIME STARTING LINEUP POWER RANKINGS */
+    function showRankingsModal() {
+        let container = document.getElementById('rankingsList');
+        let rankings = [];
+
+        for (let i = 1; i <= TOTAL_TEAMS; i++) {
+            let t = teams[i];
+            let teamPlayers = [];
+            ['QB', 'RB', 'WR', 'TE', 'K', 'DEF'].forEach(pos => {
+                t.roster[pos].forEach(name => {
+                    let p = players.find(x => x.name === name);
+                    if (p) teamPlayers.push(p);
+                });
+            });
+
+            // Calculate Optimal Starting Lineup (1 QB, 2 RB, 3 WR, 1 TE, 1 SFLEX, 1 FLEX, 1 K, 1 DEF)
+            let qbs = teamPlayers.filter(p => p.pos === 'QB').sort((a,b) => b.pts - a.pts);
+            let rbs = teamPlayers.filter(p => p.pos === 'RB').sort((a,b) => b.pts - a.pts);
+            let wrs = teamPlayers.filter(p => p.pos === 'WR').sort((a,b) => b.pts - a.pts);
+            let tes = teamPlayers.filter(p => p.pos === 'TE').sort((a,b) => b.pts - a.pts);
+            let ks  = teamPlayers.filter(p => p.pos === 'K').sort((a,b) => b.pts - a.pts);
+            let defs= teamPlayers.filter(p => p.pos === 'DEF').sort((a,b) => b.pts - a.pts);
+
+            let starterScore = 0;
+            let startersCount = 0;
+
+            if (qbs[0]) { starterScore += qbs[0].pts; startersCount++; }
+            if (rbs[0]) { starterScore += rbs[0].pts; startersCount++; }
+            if (rbs[1]) { starterScore += rbs[1].pts; startersCount++; }
+            if (wrs[0]) { starterScore += wrs[0].pts; startersCount++; }
+            if (wrs[1]) { starterScore += wrs[1].pts; startersCount++; }
+            if (wrs[2]) { starterScore += wrs[2].pts; startersCount++; }
+            if (tes[0]) { starterScore += tes[0].pts; startersCount++; }
+
+            // Remaining pool for Flex & Superflex
+            let poolSFLEX = [
+                ...qbs.slice(1),
+                ...rbs.slice(2),
+                ...wrs.slice(3),
+                ...tes.slice(1)
+            ].sort((a,b) => b.pts - a.pts);
+
+            if (poolSFLEX[0]) {
+                starterScore += poolSFLEX[0].pts;
+                startersCount++;
+            }
+
+            let poolFLEX = [
+                ...rbs.slice(2),
+                ...wrs.slice(3),
+                ...tes.slice(1)
+            ].filter(p => p !== poolSFLEX[0]).sort((a,b) => b.pts - a.pts);
+
+            if (poolFLEX[0]) {
+                starterScore += poolFLEX[0].pts;
+                startersCount++;
+            }
+
+            if (ks[0]) { starterScore += ks[0].pts; startersCount++; }
+            if (defs[0]) { starterScore += defs[0].pts; startersCount++; }
+
+            rankings.push({
+                teamId: i,
+                name: t.name,
+                isUser: i === userSlot,
+                starterScore: parseFloat(starterScore.toFixed(1)),
+                startersCount: startersCount,
+                qbCount: qbs.length,
+                rbCount: rbs.length,
+                wrCount: wrs.length,
+                teCount: tes.length
+            });
+        }
+
+        rankings.sort((a,b) => b.starterScore - a.starterScore);
+        let maxScore = rankings[0].starterScore || 1;
+
+        container.innerHTML = '';
+        rankings.forEach((r, idx) => {
+            let pct = Math.max(10, Math.round((r.starterScore / maxScore) * 100));
+            container.innerHTML += `
+                <div class="rank-card ${r.isUser ? 'rank-user' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color:${r.isUser ? '#00f0ff' : '#f8fafc'}">#${idx + 1} ${r.name} ${r.isUser ? '(YOU)' : ''}</strong>
+                            <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">
+                                QBs: ${r.qbCount} | RBs: ${r.rbCount} | WRs: ${r.wrCount} | TEs: ${r.teCount} (${r.startersCount}/11 Starters Drafted)
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-size: 15px; font-weight: 800; color: #00ff88;">${r.starterScore}</span>
+                            <span style="font-size: 10px; color: #94a3b8;"> pts/wk</span>
+                        </div>
+                    </div>
+                    <div class="rank-bar-bg">
+                        <div class="rank-bar-fill" style="width: ${pct}%;"></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('rankingsModal').style.display = 'flex';
     }
 
     function toggleTeamAccordion(teamId) {
