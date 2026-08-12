@@ -85,6 +85,8 @@
         .btn-undo:hover { background: #334155; }
         .btn-action { background: #0a0f24; cursor: pointer; border: 1px solid #00f0ff; color: #00f0ff; font-weight: 600; }
         .btn-action:hover { background: rgba(0, 240, 255, 0.15); box-shadow: 0 0 8px rgba(0, 240, 255, 0.4); }
+        .btn-reset { background: rgba(255, 0, 85, 0.15); cursor: pointer; border: 1px solid #ff0055; color: #ff0055; font-weight: bold; }
+        .btn-reset:hover { background: #ff0055; color: #fff; box-shadow: 0 0 8px rgba(255, 0, 85, 0.6); }
         
         /* TABLE */
         .table-container { 
@@ -100,7 +102,7 @@
         th { background: #050814; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
         tr:hover { background: #0f1738; }
         
-        /* DISTINCT NEON POSITION & DEPTH BADGES */
+        /* DISTINCT NEON POSITION BADGES */
         .badge { padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; letter-spacing: 0.5px; }
         .badge-QB { background: #ff0055; color: #fff; box-shadow: 0 0 6px rgba(255, 0, 85, 0.6); }
         .badge-RB { background: #00ff88; color: #050814; box-shadow: 0 0 6px rgba(0, 255, 136, 0.6); }
@@ -257,11 +259,12 @@
                     <button class="btn-filter" onclick="setPosFilter('DEF')">DEF</button>
                 </div>
                 <div class="btn-group">
-                    <input type="text" id="searchInput" placeholder="Search player, team, depth (RB1, WR2)..." onkeyup="renderTable()" style="min-width: 220px;">
+                    <input type="text" id="searchInput" placeholder="Search player, team, depth (RB1, WR2)..." onkeyup="renderTable()" style="min-width: 200px;">
                     <button class="btn-action" onclick="showTeamNamesModal()">⚙️ Teams</button>
                     <button class="btn-action" onclick="showKeepersModal()">🔒 Keepers</button>
                     <button class="btn-action" onclick="showRostersModal()">📋 Rosters</button>
                     <button class="btn-undo" onclick="undoLastPick()">↩ Undo</button>
+                    <button class="btn-reset" onclick="resetDraft()">🗑️ Reset</button>
                 </div>
             </div>
 
@@ -360,6 +363,7 @@
     const TOTAL_TEAMS = 12;
     const MAX_ROUNDS = 16;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v2';
 
     let userSlot = 1;
     let currentOverallPick = 1;
@@ -372,6 +376,66 @@
     let teams = {};
     for (let i = 1; i <= TOTAL_TEAMS; i++) {
         teams[i] = { id: i, name: `Team ${i}`, roster: { 'QB': [], 'RB': [], 'WR': [], 'TE': [], 'K': [], 'DEF': [] } };
+    }
+
+    /* REAL-TIME PERSISTENCE ENGINE */
+    function saveDraftState() {
+        try {
+            const state = {
+                userSlot,
+                currentOverallPick,
+                teams,
+                draftHistory,
+                keepersByPick
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+            console.error("Auto-save failed", e);
+        }
+    }
+
+    function loadDraftState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) return false;
+        try {
+            const state = JSON.parse(saved);
+            userSlot = state.userSlot || 1;
+            currentOverallPick = state.currentOverallPick || 1;
+            teams = state.teams || teams;
+            draftHistory = state.draftHistory || [];
+            keepersByPick = state.keepersByPick || {};
+
+            // Re-apply keeper status to master player objects
+            Object.values(keepersByPick).forEach(k => {
+                let p = players.find(x => x.name === k.player.name);
+                if (p) {
+                    p.drafted = true;
+                    p.isKeeper = true;
+                    p.keeperTeamId = k.teamId;
+                    p.keeperRound = k.round;
+                    p.keeperPick = k.player.keeperPick;
+                }
+            });
+
+            // Re-apply drafted status from history
+            draftHistory.forEach(item => {
+                let p = players.find(x => x.name === item.player.name);
+                if (p) p.drafted = true;
+            });
+
+            return true;
+        } catch (e) {
+            console.error("Failed to restore saved draft state", e);
+            return false;
+        }
+    }
+
+    function resetDraft() {
+        let confirmReset = confirm("⚠️ RESET SKOAL BOWL DRAFT?\n\nThis will clear all drafted players, keepers, and history back to Pick 1.01. Are you sure?");
+        if (confirmReset) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
     }
 
     function calculatePts(p) {
@@ -416,6 +480,7 @@
     function setUserSlot(slot) {
         if (draftHistory.length > 0) return;
         userSlot = parseInt(slot);
+        saveDraftState();
         updateStatusPanel();
         renderTable();
         renderTopTargets();
@@ -441,6 +506,7 @@
             if (val) teams[i].name = val;
         }
         document.getElementById('namesModal').style.display = 'none';
+        saveDraftState();
         populateSlotDropdown();
         updateStatusPanel();
         renderTable();
@@ -523,6 +589,7 @@
         keepersByPick[pick] = { player: p, teamId: teamId, round: round };
         teams[teamId].roster[p.pos].push(p.name);
 
+        saveDraftState();
         updateKeeperRoundDropdown();
         populateKeeperPlayerDropdown();
         renderKeepersList();
@@ -548,6 +615,7 @@
         delete p.keeperRound;
         delete p.keeperPick;
 
+        saveDraftState();
         updateKeeperRoundDropdown();
         populateKeeperPlayerDropdown();
         renderKeepersList();
@@ -623,6 +691,9 @@
         players.forEach(p => {
             p.vorp = parseFloat((p.pts - baselines[p.pos]).toFixed(2));
         });
+
+        // Restore saved draft state from browser localStorage
+        loadDraftState();
 
         populateSlotDropdown();
         updateStatusPanel();
@@ -831,6 +902,7 @@
 
         checkAndAdvanceKeeperPicks();
 
+        saveDraftState();
         updateStatusPanel();
         renderTable();
         renderTopTargets();
@@ -862,6 +934,7 @@
             currentOverallPick = last.pick;
         }
 
+        saveDraftState();
         updateStatusPanel();
         renderTable();
         renderTopTargets();
