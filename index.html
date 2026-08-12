@@ -100,7 +100,7 @@
         th { background: #050814; color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 11px; position: sticky; top: 0; z-index: 10; }
         tr:hover { background: #0f1738; }
         
-        /* DISTINCT NEON POSITION BADGES */
+        /* DISTINCT NEON POSITION & DEPTH BADGES */
         .badge { padding: 2px 6px; border-radius: 4px; font-weight: 800; font-size: 10px; letter-spacing: 0.5px; }
         .badge-QB { background: #ff0055; color: #fff; box-shadow: 0 0 6px rgba(255, 0, 85, 0.6); }
         .badge-RB { background: #00ff88; color: #050814; box-shadow: 0 0 6px rgba(0, 255, 136, 0.6); }
@@ -109,8 +109,16 @@
         .badge-K { background: #b026ff; color: #fff; box-shadow: 0 0 6px rgba(176, 38, 255, 0.6); }
         .badge-DEF { background: #6366f1; color: #fff; box-shadow: 0 0 6px rgba(99, 102, 241, 0.6); }
         
+        /* POSITION-COLORED DEPTH BADGES */
+        .badge-depth { font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: 800; display: inline-block; }
+        .badge-depth-QB { background: rgba(255, 0, 85, 0.15); color: #ff0055; border: 1px solid #ff0055; box-shadow: 0 0 6px rgba(255, 0, 85, 0.4); }
+        .badge-depth-RB { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; box-shadow: 0 0 6px rgba(0, 255, 136, 0.4); }
+        .badge-depth-WR { background: rgba(0, 212, 255, 0.15); color: #00d4ff; border: 1px solid #00d4ff; box-shadow: 0 0 6px rgba(0, 212, 255, 0.4); }
+        .badge-depth-TE { background: rgba(255, 170, 0, 0.15); color: #ffaa00; border: 1px solid #ffaa00; box-shadow: 0 0 6px rgba(255, 170, 0, 0.4); }
+        .badge-depth-K  { background: rgba(176, 38, 255, 0.15); color: #b026ff; border: 1px solid #b026ff; box-shadow: 0 0 6px rgba(176, 38, 255, 0.4); }
+        .badge-depth-DEF{ background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid #6366f1; box-shadow: 0 0 6px rgba(99, 102, 241, 0.4); }
+        
         .badge-team { background: #141b3a; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; border: 1px solid #1e294d; }
-        .badge-depth { background: rgba(0, 240, 255, 0.1); color: #00f0ff; border: 1px solid #00f0ff; font-size: 10px; padding: 1px 4px; border-radius: 3px; font-weight: bold; }
         .badge-keeper { background: #ffe600; color: #050814; font-size: 9px; margin-left: 4px; font-weight: 800; box-shadow: 0 0 6px rgba(255, 230, 0, 0.6); }
         
         .btn-draft { 
@@ -206,7 +214,7 @@
 
     <!-- LIVE DATA SYNC STATUS INDICATOR -->
     <div class="status-pill-container">
-        <span id="feedStatusPill" class="badge-depth" style="font-size: 11px; padding: 3px 10px;">
+        <span id="feedStatusPill" class="badge-depth badge-depth-WR" style="font-size: 11px; padding: 3px 10px;">
             ⏳ Connecting to live feed...
         </span>
     </div>
@@ -564,7 +572,7 @@
             container.innerHTML += `
                 <div class="keeper-row">
                     <div>
-                        <strong>${p.name}</strong> <span class="badge badge-${p.pos}">${p.pos}</span> <span class="badge-depth">${p.depth || ''}</span>
+                        <strong>${p.name}</strong> <span class="badge-depth badge-depth-${p.pos}">${p.depth || p.pos}</span>
                         <div style="font-size: 10px; color: #94a3b8; margin-top: 1px;">
                             ${t.name} • Round ${p.keeperRound} (Pick ${formatPick(p.keeperPick)} / #${p.keeperPick})
                         </div>
@@ -583,8 +591,7 @@
                 players = await res.json();
                 if (statusPill) {
                     statusPill.innerHTML = `🟢 Live Sync Connected (${players.length} Players)`;
-                    statusPill.style.borderColor = '#00ff88';
-                    statusPill.style.color = '#00ff88';
+                    statusPill.className = 'badge-depth badge-depth-RB';
                 }
             } else {
                 throw new Error("HTTP " + res.status);
@@ -593,8 +600,7 @@
             console.error("Could not load projections.json", e);
             if (statusPill) {
                 statusPill.innerHTML = `🔴 Offline Fallback Mode`;
-                statusPill.style.borderColor = '#ff0055';
-                statusPill.style.color = '#ff0055';
+                statusPill.className = 'badge-depth badge-depth-QB';
             }
         }
         initEngine();
@@ -732,12 +738,13 @@
 
         top3.forEach((item, idx) => {
             let p = item.player;
+            let depthDisplay = p.depth || p.pos;
             container.innerHTML += `
                 <div class="target-card">
                     <div style="display: flex; align-items: center;">
                         <span class="target-rank">#${idx + 1}</span>
                         <div>
-                            <div class="target-name">${p.name} <span class="badge badge-${p.pos}">${p.pos}</span> <span class="badge-depth">${p.depth || ''}</span></div>
+                            <div class="target-name">${p.name} <span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span></div>
                             <div class="target-stats">${p.team || ''} | ${p.pts} pts | VORP: <strong style="color:#00ff88;">+${p.vorp}</strong></div>
                         </div>
                     </div>
@@ -762,12 +769,13 @@
             let isUser = item.teamId === userSlot ? 'feed-user' : '';
             let isKeeper = item.isKeeper ? 'feed-keeper' : '';
             let keeperBadge = item.isKeeper ? `<span class="badge badge-keeper">KEEPER</span>` : '';
+            let depthDisplay = item.player.depth || item.player.pos;
 
             container.innerHTML += `
                 <div class="feed-item ${isUser} ${isKeeper}">
                     <div>
                         <span class="feed-pick-badge">${formatPick(item.pick)}</span>
-                        <strong>${item.player.name}</strong> <span class="badge badge-${item.player.pos}">${item.player.pos}</span> <span class="badge-team">${item.player.team || ''}</span> ${keeperBadge}
+                        <strong>${item.player.name}</strong> <span class="badge-depth badge-depth-${item.player.pos}">${depthDisplay}</span> <span class="badge-team">${item.player.team || ''}</span> ${keeperBadge}
                     </div>
                     <div style="color: #94a3b8; font-size: 10px;">${teams[item.teamId].name}</div>
                 </div>
@@ -890,13 +898,14 @@
             let vorpClass = p.vorp >= 0 ? 'vorp-positive' : 'vorp-negative';
             let cliffVal = vonaMap[p.pos] || 0;
             let cliffClass = cliffVal >= 15.0 ? 'cliff-high' : '';
+            let depthDisplay = p.depth || p.pos;
 
             let row = `
                 <tr>
                     <td>#${index + 1}</td>
                     <td><strong>${p.name}</strong></td>
                     <td><span class="badge-team">${p.team || 'FA'}</span></td>
-                    <td><span class="badge-depth">${p.depth || p.pos}</span></td>
+                    <td><span class="badge-depth badge-depth-${p.pos}">${depthDisplay}</span></td>
                     <td>${p.pts}</td>
                     <td class="${vorpClass}">${p.vorp > 0 ? '+' + p.vorp : p.vorp}</td>
                     <td><span class="cliff-tag ${cliffClass}">-${cliffVal} pts drop</span></td>
