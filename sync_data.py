@@ -1,34 +1,18 @@
 import json
 import requests
 
-def fetch_sleeper_data():
-    """Fetches live NFL players metadata and projected stats from Sleeper's open API."""
-    players_meta = {}
+def fetch_sleeper_raw():
+    """Fetches full NFL player database and live projections from Sleeper."""
+    players_data = {}
     projections_data = {}
 
-    # 1. Fetch live player metadata (Teams, Depth Charts, Status)
     try:
         res = requests.get("https://api.sleeper.app/v1/players/nfl", timeout=30)
         if res.status_code == 200:
-            for pid, p in res.json().items():
-                first = p.get('first_name', '') or ''
-                last = p.get('last_name', '') or ''
-                full_name = f"{first} {last}".strip()
-                pos = p.get('position', '')
-                team = p.get('team') or 'FA'
-                depth_order = p.get('depth_chart_order')
-                depth_label = f"{pos}{depth_order}" if (pos and depth_order) else (p.get('depth_chart_position') or pos)
-
-                if full_name:
-                    players_meta[full_name.lower()] = {
-                        "pid": pid,
-                        "team": team,
-                        "depth": depth_label
-                    }
+            players_data = res.json()
     except Exception as e:
         print(f"Warning: Player metadata fetch error: {e}")
 
-    # 2. Fetch live season projections feed
     for endpoint in [
         "https://api.sleeper.app/projections/nfl/2026?season_type=regular",
         "https://api.sleeper.app/projections/nfl/regular/2026"
@@ -43,11 +27,11 @@ def fetch_sleeper_data():
         except Exception:
             continue
 
-    return players_meta, projections_data
+    return players_data, projections_data
 
-# Schema: (Name, Pos, Team, Depth, PassYds, PassTd, Int, RushYds, RushTd, Rec, RecYds, RecTd, Fum)
-SKILL_PLAYERS = [
-    # === 40 QUARTERBACKS ===
+# BASE SEED PLAYERS (Curated projections for established players)
+BASE_SEED = [
+    # QBs
     ("Josh Allen", "QB", "BUF", "QB1", 3800, 28, 11, 540, 10, 0, 0, 0, 2),
     ("Lamar Jackson", "QB", "BAL", "QB1", 3500, 27, 8, 720, 5, 0, 0, 0, 2),
     ("Drake Maye", "QB", "NE", "QB1", 4050, 28, 10, 480, 4, 0, 0, 0, 2),
@@ -89,7 +73,7 @@ SKILL_PLAYERS = [
     ("Aidan O'Connell", "QB", "LV", "QB3", 2850, 14, 9, 40, 0, 0, 0, 0, 2),
     ("Drew Lock", "QB", "NYG", "QB2", 2700, 14, 10, 90, 1, 0, 0, 0, 2),
 
-    # === 76 RUNNING BACKS ===
+    # RBs
     ("Jahmyr Gibbs", "RB", "DET", "RB1", 0, 0, 0, 1480, 14, 73, 650, 6, 2),
     ("Bijan Robinson", "RB", "ATL", "RB1", 0, 0, 0, 1630, 12, 74, 650, 5, 2),
     ("James Cook III", "RB", "BUF", "RB1", 0, 0, 0, 1560, 12, 32, 280, 4, 1),
@@ -167,7 +151,7 @@ SKILL_PLAYERS = [
     ("Trayveon Williams", "RB", "CIN", "RB3", 0, 0, 0, 180, 1, 10, 60, 0, 0),
     ("Sean Tucker", "RB", "TB", "RB4", 0, 0, 0, 210, 1, 12, 80, 0, 0),
 
-    # === 100 WIDE RECEIVERS ===
+    # WRs
     ("Jaxon Smith-Njigba", "WR", "SEA", "WR1", 0, 0, 0, 30, 0, 111, 1568, 9, 1),
     ("Puka Nacua", "WR", "LAR", "WR1", 0, 0, 0, 106, 1, 123, 1590, 10, 1),
     ("Ja'Marr Chase", "WR", "CIN", "WR1", 0, 0, 0, 40, 0, 121, 1512, 11, 1),
@@ -269,7 +253,7 @@ SKILL_PLAYERS = [
     ("Lil'Jordan Humphrey", "WR", "DEN", "WR4", 0, 0, 0, 0, 0, 24, 280, 2, 0),
     ("David Moore", "WR", "CAR", "WR2", 0, 0, 0, 0, 0, 22, 270, 1, 0),
 
-    # === 20 TIGHT ENDS ===
+    # TEs
     ("Trey McBride", "TE", "ARI", "TE1", 0, 0, 0, 0, 0, 109, 1120, 6, 1),
     ("Brock Bowers", "TE", "LV", "TE1", 0, 0, 0, 20, 0, 96, 1080, 8, 1),
     ("George Kittle", "TE", "SF", "TE1", 0, 0, 0, 0, 0, 75, 940, 7, 1),
@@ -338,66 +322,159 @@ DEFENSES = [
     ("Tampa Bay Buccaneers DEF", "DEF", "TB", "DST", 92)
 ]
 
+# Baseline statistical templates for newly discovered / promoted players
+DEFAULT_ROLE_STATS = {
+    "QB1": {"passYds": 3400, "passTd": 20, "int": 11, "rushYds": 200, "rushTd": 2, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2},
+    "QB2": {"passYds": 2800, "passTd": 15, "int": 9, "rushYds": 100, "rushTd": 1, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2},
+    "RB1": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 950, "rushTd": 8, "rec": 40, "recYds": 300, "recTd": 2, "fum": 1},
+    "RB2": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 550, "rushTd": 4, "rec": 25, "recYds": 180, "recTd": 1, "fum": 1},
+    "RB3": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 300, "rushTd": 2, "rec": 15, "recYds": 100, "recTd": 0, "fum": 0},
+    "WR1": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 20, "rushTd": 0, "rec": 80, "recYds": 1000, "recTd": 6, "fum": 1},
+    "WR2": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 15, "rushTd": 0, "rec": 60, "recYds": 750, "recTd": 5, "fum": 1},
+    "WR3": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 45, "recYds": 550, "recTd": 3, "fum": 1},
+    "WR4": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 30, "recYds": 380, "recTd": 2, "fum": 0},
+    "TE1": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 60, "recYds": 650, "recTd": 5, "fum": 1},
+    "TE2": {"passYds": 0, "passTd": 0, "int": 0, "rushYds": 0, "rushTd": 0, "rec": 35, "recYds": 380, "recTd": 3, "fum": 1},
+    "K1":  {"fgYds": 1150, "pat": 36}
+}
+
 def build_player_objects():
-    res = []
-    for p in SKILL_PLAYERS:
-        res.append({
+    res = {}
+    for p in BASE_SEED:
+        res[p[0].lower()] = {
             "name": p[0], "pos": p[1], "team": p[2], "depth": p[3],
             "passYds": p[4], "passTd": p[5], "int": p[6],
             "rushYds": p[7], "rushTd": p[8],
             "rec": p[9], "recYds": p[10], "recTd": p[11],
             "fum": p[12]
-        })
+        }
     for p in KICKERS:
-        res.append({
+        res[p[0].lower()] = {
             "name": p[0], "pos": p[1], "team": p[2], "depth": p[3],
             "fgYds": p[4], "pat": p[5]
-        })
+        }
     for p in DEFENSES:
-        res.append({
+        res[p[0].lower()] = {
             "name": p[0], "pos": p[1], "team": p[2], "depth": p[3],
             "pts": p[4]
-        })
+        }
     return res
 
 def main():
-    players_meta, projections_data = fetch_sleeper_data()
-    players = build_player_objects()
+    players_raw, projections_data = fetch_sleeper_raw()
+    curated_players = build_player_objects()
     
-    # Intelligently update player metadata & live stats if available online
-    for p in players:
-        key = p["name"].lower()
-        if key in players_meta:
-            meta = players_meta[key]
-            if meta.get("team") and meta["team"] != "FA":
-                p["team"] = meta["team"]
-            if meta.get("depth"):
-                p["depth"] = meta["depth"]
-
-            # Merge live stat projections if the API has published them
-            pid = meta.get("pid")
-            if pid and pid in projections_data:
-                proj = projections_data[pid]
-                if p["pos"] in ["QB", "RB", "WR", "TE"]:
-                    if "pass_yd" in proj: p["passYds"] = int(proj["pass_yd"])
-                    if "pass_td" in proj: p["passTd"] = int(proj["pass_td"])
-                    if "pass_int" in proj: p["int"] = int(proj["pass_int"])
-                    if "rush_yd" in proj: p["rushYds"] = int(proj["rush_yd"])
-                    if "rush_td" in proj: p["rushTd"] = int(proj["rush_td"])
-                    if "rec" in proj: p["rec"] = int(proj["rec"])
-                    if "rec_yd" in proj: p["recYds"] = int(proj["rec_yd"])
-                    if "rec_td" in proj: p["recTd"] = int(proj["rec_td"])
-                    if "fum_lost" in proj: p["fum"] = int(proj["fum_lost"])
-                elif p["pos"] == "K":
-                    if "fgm_yds" in proj: p["fgYds"] = int(proj["fgm_yds"])
-                    if "xpm" in proj: p["pat"] = int(proj["xpm"])
-                elif p["pos"] == "DEF":
-                    if "pts_std" in proj: p["pts"] = float(proj["pts_std"])
-
-    with open("projections.json", "w") as f:
-        json.dump(players, f, indent=2)
+    # 1. Update existing players with fresh depth charts, teams, and stats
+    for key, p in curated_players.items():
+        if p["pos"] == "DEF": continue
         
-    print(f"Successfully generated projections.json with {len(players)} players.")
+        # Match with Sleeper API
+        for pid, s_player in players_raw.items():
+            first = s_player.get('first_name', '') or ''
+            last = s_player.get('last_name', '') or ''
+            full_name = f"{first} {last}".strip().lower()
+            
+            if full_name == key:
+                if s_player.get('team') and s_player['team'] != 'FA':
+                    p["team"] = s_player['team']
+                depth_order = s_player.get('depth_chart_order')
+                pos = s_player.get('position') or p["pos"]
+                if depth_order:
+                    p["depth"] = f"{pos}{depth_order}"
+                    
+                # Merge live projections if published
+                if pid in projections_data:
+                    proj = projections_data[pid]
+                    if p["pos"] in ["QB", "RB", "WR", "TE"]:
+                        if "pass_yd" in proj: p["passYds"] = int(proj["pass_yd"])
+                        if "pass_td" in proj: p["passTd"] = int(proj["pass_td"])
+                        if "pass_int" in proj: p["int"] = int(proj["pass_int"])
+                        if "rush_yd" in proj: p["rushYds"] = int(proj["rush_yd"])
+                        if "rush_td" in proj: p["rushTd"] = int(proj["rush_td"])
+                        if "rec" in proj: p["rec"] = int(proj["rec"])
+                        if "rec_yd" in proj: p["recYds"] = int(proj["rec_yd"])
+                        if "rec_td" in proj: p["recTd"] = int(proj["rec_td"])
+                        if "fum_lost" in proj: p["fum"] = int(proj["fum_lost"])
+                    elif p["pos"] == "K":
+                        if "fgm_yds" in proj: p["fgYds"] = int(proj["fgm_yds"])
+                        if "xpm" in proj: p["pat"] = int(proj["xpm"])
+                break
+
+    # 2. AUTO-DISCOVERY: Scan all Sleeper players for new promotions or signings
+    for pid, s_player in players_raw.items():
+        team = s_player.get('team')
+        pos = s_player.get('position')
+        depth_order = s_player.get('depth_chart_order')
+        status = s_player.get('status')
+        
+        if not team or team == 'FA' or not pos or not depth_order:
+            continue
+        if status in ['Inactive', 'Injured Reserve']:
+            continue
+            
+        first = s_player.get('first_name', '') or ''
+        last = s_player.get('last_name', '') or ''
+        full_name = f"{first} {last}".strip()
+        key = full_name.lower()
+        
+        # Determine if this player is in a relevant depth chart tier
+        is_relevant = (
+            (pos == "QB" and depth_order <= 2) or
+            (pos == "RB" and depth_order <= 3) or
+            (pos == "WR" and depth_order <= 4) or
+            (pos == "TE" and depth_order <= 2) or
+            (pos == "K"  and depth_order <= 1)
+        )
+        
+        # If player is promoted/relevant and not already on our board, add them!
+        if is_relevant and key not in curated_players and len(full_name) > 3:
+            depth_tag = f"{pos}{depth_order}"
+            base_stats = DEFAULT_ROLE_STATS.get(depth_tag, DEFAULT_ROLE_STATS.get(f"{pos}1", {})).copy()
+            
+            new_entry = {
+                "name": full_name,
+                "pos": pos,
+                "team": team,
+                "depth": depth_tag,
+                "passYds": base_stats.get("passYds", 0),
+                "passTd": base_stats.get("passTd", 0),
+                "int": base_stats.get("int", 0),
+                "rushYds": base_stats.get("rushYds", 0),
+                "rushTd": base_stats.get("rushTd", 0),
+                "rec": base_stats.get("rec", 0),
+                "recYds": base_stats.get("recYds", 0),
+                "recTd": base_stats.get("recTd", 0),
+                "fum": base_stats.get("fum", 0)
+            }
+            if pos == "K":
+                new_entry = {"name": full_name, "pos": pos, "team": team, "depth": depth_tag, "fgYds": 1150, "pat": 35}
+
+            # If Sleeper has live projections for this new player, apply them
+            if pid in projections_data:
+                proj = projections_data[pid]
+                if pos in ["QB", "RB", "WR", "TE"]:
+                    if "pass_yd" in proj: new_entry["passYds"] = int(proj["pass_yd"])
+                    if "pass_td" in proj: new_entry["passTd"] = int(proj["pass_td"])
+                    if "pass_int" in proj: new_entry["int"] = int(proj["pass_int"])
+                    if "rush_yd" in proj: new_entry["rushYds"] = int(proj["rush_yd"])
+                    if "rush_td" in proj: new_entry["rushTd"] = int(proj["rush_td"])
+                    if "rec" in proj: new_entry["rec"] = int(proj["rec"])
+                    if "rec_yd" in proj: new_entry["recYds"] = int(proj["rec_yd"])
+                    if "rec_td" in proj: new_entry["recTd"] = int(proj["rec_td"])
+                    if "fum_lost" in proj: new_entry["fum"] = int(proj["fum_lost"])
+                elif pos == "K":
+                    if "fgm_yds" in proj: new_entry["fgYds"] = int(proj["fgm_yds"])
+                    if "xpm" in proj: new_entry["pat"] = int(proj["xpm"])
+
+            curated_players[key] = new_entry
+            print(f"✨ Auto-discovered & added: {full_name} ({team} - {depth_tag})")
+
+    final_player_list = list(curated_players.values())
+    
+    with open("projections.json", "w") as f:
+        json.dump(final_player_list, f, indent=2)
+        
+    print(f"✓ Successfully generated projections.json with {len(final_player_list)} total active players.")
 
 if __name__ == "__main__":
     main()
