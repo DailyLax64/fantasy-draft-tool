@@ -214,7 +214,7 @@
         .badge-DEF { background: #6366f1; color: #fff; box-shadow: 0 0 6px rgba(99, 102, 241, 0.6); }
         
         /* POSITION-COLORED DEPTH BADGES */
-        .badge-depth { font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: 800; display: inline-block; }
+        .badge-depth { font-size: 10px; padding: 2px 5px; border-radius: 3px; font-weight: 800; display: inline-block; white-space: nowrap; }
         .badge-depth-QB { background: rgba(255, 0, 85, 0.15); color: #ff0055; border: 1px solid #ff0055; box-shadow: 0 0 6px rgba(255, 0, 85, 0.4); }
         .badge-depth-RB { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; box-shadow: 0 0 6px rgba(0, 255, 136, 0.4); }
         .badge-depth-WR { background: rgba(0, 212, 255, 0.15); color: #00d4ff; border: 1px solid #00d4ff; box-shadow: 0 0 6px rgba(0, 212, 255, 0.4); }
@@ -223,20 +223,29 @@
         .badge-depth-DEF{ background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid #6366f1; box-shadow: 0 0 6px rgba(99, 102, 241, 0.4); }
         
         /* ANALYTICAL INSIGHT BADGES */
-        .badge-tier-ender { background: #ff0055; color: #fff; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; animation: neonPulse 1.2s infinite; box-shadow: 0 0 6px rgba(255, 0, 85, 0.6); }
-        .badge-tier-count { background: #1e294d; color: #f8fafc; font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 3px; border: 1px solid #38bdf8; }
-        .badge-stack { background: rgba(255, 230, 0, 0.2); color: #ffe600; border: 1px solid #ffe600; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; box-shadow: 0 0 6px rgba(255, 230, 0, 0.4); }
-        .badge-upside { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; }
-        .badge-bye { background: #141b3a; color: #94a3b8; font-size: 9px; padding: 1px 4px; border-radius: 3px; border: 1px solid #1e294d; font-weight: 600; }
-        .badge-bye-conflict { background: rgba(255, 0, 85, 0.2); color: #ff3366; border: 1px solid #ff0055; font-size: 9px; font-weight: bold; padding: 1px 4px; border-radius: 3px; }
+        .badge-tier-ender { background: #ff0055; color: #fff; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; animation: neonPulse 1.2s infinite; box-shadow: 0 0 6px rgba(255, 0, 85, 0.6); white-space: nowrap; }
+        .badge-tier-count { background: #1e294d; color: #f8fafc; font-size: 9px; font-weight: 700; padding: 1px 4px; border-radius: 3px; border: 1px solid #38bdf8; white-space: nowrap; }
+        .badge-stack { background: rgba(255, 230, 0, 0.2); color: #ffe600; border: 1px solid #ffe600; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; box-shadow: 0 0 6px rgba(255, 230, 0, 0.4); white-space: nowrap; }
+        .badge-upside { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+        .badge-bye { background: #141b3a; color: #94a3b8; font-size: 9px; padding: 1px 4px; border-radius: 3px; border: 1px solid #1e294d; font-weight: 600; white-space: nowrap; }
+        .badge-bye-conflict { background: rgba(255, 0, 85, 0.2); color: #ff3366; border: 1px solid #ff0055; font-size: 9px; font-weight: bold; padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
         
         /* SURVIVAL PILL */
-        .pill-survive { font-size: 10px; font-weight: 800; padding: 1px 5px; border-radius: 3px; display: inline-block; }
+        .pill-survive { 
+            font-size: 10px; 
+            font-weight: 800; 
+            padding: 1px 6px; 
+            border-radius: 3px; 
+            display: inline-flex; 
+            align-items: center; 
+            white-space: nowrap; 
+            flex-shrink: 0; 
+        }
         .survive-high { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid #00ff88; }
         .survive-med { background: rgba(255, 170, 0, 0.15); color: #ffaa00; border: 1px solid #ffaa00; }
         .survive-low { background: rgba(255, 0, 85, 0.15); color: #ff0055; border: 1px solid #ff0055; }
         
-        .badge-team { background: #141b3a; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; border: 1px solid #1e294d; }
+        .badge-team { background: #141b3a; color: #e2e8f0; font-size: 10px; padding: 2px 4px; border-radius: 3px; font-weight: 600; border: 1px solid #1e294d; white-space: nowrap; }
         .badge-keeper { background: #ffe600; color: #050814; font-size: 9px; margin-left: 4px; font-weight: 800; box-shadow: 0 0 6px rgba(255, 230, 0, 0.6); }
         
         .btn-draft { 
@@ -245,11 +254,12 @@
             cursor: pointer; 
             font-weight: 800; 
             border-radius: 4px; 
-            padding: 4px 10px; 
+            padding: 5px 11px; 
             color: #050814; 
             font-size: 11px; 
             box-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
             transition: 0.15s;
+            flex-shrink: 0;
         }
         .btn-draft:hover { background: #39ff14; box-shadow: 0 0 12px rgba(57, 255, 20, 0.8); }
         
@@ -295,7 +305,7 @@
         .cliff-val-text { font-size: 12px; font-weight: 800; color: #94a3b8; }
         .cliff-val-text.high-drop { color: #ff0055; text-shadow: 0 0 6px rgba(255, 0, 85, 0.5); }
         
-        /* CLEAN 3-LINE TARGETS STACK */
+        /* REDESIGNED & CENTERED 3-LINE TARGETS STACK */
         .target-stack { display: flex; flex-direction: column; gap: 8px; }
         .target-card { 
             background: #050814; 
@@ -305,17 +315,68 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            gap: 8px;
+            gap: 10px;
             transition: 0.2s; 
         }
         .target-card:hover { border-color: #00f0ff; box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
-        .target-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
-        .target-rank { font-size: 14px; font-weight: 800; color: #38bdf8; min-width: 20px; }
-        .target-details { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-        .target-row1 { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; overflow: hidden; }
-        .target-name { font-size: 13px; font-weight: bold; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .target-row2 { display: flex; align-items: center; gap: 6px; font-size: 11px; }
-        .target-row3 { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
+        .target-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex: 1; 
+            min-width: 0; 
+        }
+        .target-rank { 
+            font-size: 14px; 
+            font-weight: 800; 
+            color: #38bdf8; 
+            min-width: 20px; 
+            text-align: center; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .target-details { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            gap: 3px; 
+            min-width: 0; 
+            flex: 1; 
+        }
+        .target-row1 { 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            flex-wrap: nowrap; 
+            overflow: hidden; 
+            line-height: 1.2;
+        }
+        .target-name { 
+            font-size: 13px; 
+            font-weight: bold; 
+            color: #f8fafc; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .target-row2 { 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            font-size: 11px; 
+            white-space: nowrap; 
+            flex-wrap: nowrap;
+            line-height: 1.2;
+        }
+        .target-row3 { 
+            display: flex; 
+            align-items: center; 
+            gap: 4px; 
+            flex-wrap: wrap; 
+            margin-top: 1px; 
+            line-height: 1;
+        }
         
         /* DRAFT FEED */
         .feed-container { max-height: 36vh; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; padding-right: 2px; }
@@ -548,9 +609,9 @@
     const MAX_ROUNDS = 17;
     const REGULAR_SEASON_GAMES = 17;
     const BASELINES = { 'QB': 24, 'RB': 30, 'WR': 42, 'TE': 12, 'K': 12, 'DEF': 12 };
-    const STORAGE_KEY = 'skoal_bowl_draft_state_v11';
+    const STORAGE_KEY = 'skoal_bowl_draft_state_v12';
 
-    // 2026 OFFICIAL NFL BYE WEEKS[cite: 1]
+    // 2026 OFFICIAL NFL BYE WEEKS
     const BYE_WEEKS = {
         'CAR': 5, 'KC': 5,
         'CIN': 6, 'DET': 6, 'MIA': 6, 'MIN': 6,
@@ -1262,7 +1323,6 @@
                 ? `<span class="badge-bye-conflict">⚠️ Wk ${byeStatus.bye} Conflict</span>` 
                 : (byeStatus.bye ? `<span class="badge-bye">Bye ${byeStatus.bye}</span>` : '');
 
-            // Row 3 tags array
             let row3Tags = [];
             if (tierInfo.countInTier === 1) row3Tags.push(tierBadge);
             if (stackBadge) row3Tags.push(stackBadge);
@@ -1282,7 +1342,7 @@
                                 <span class="badge-team">${p.team || 'FA'}</span>
                                 ${byeBadge}
                             </div>
-                            <!-- LINE 2: METRICS & VALUE -->
+                            <!-- LINE 2: METRICS & VALUE (NO WRAP) -->
                             <div class="target-row2">
                                 <span style="color:#38bdf8; font-weight:700;">${p.ppg} <span style="font-size:9px; color:#94a3b8;">PPG</span></span>
                                 <span style="color:#64748b;">•</span>
@@ -1290,7 +1350,7 @@
                                 <span style="color:#64748b;">•</span>
                                 <span class="pill-survive ${survivalClass}">${survivalPct}% Survive</span>
                             </div>
-                            <!-- LINE 3: STRATEGY TAGS (ONLY IF APPLICABLE) -->
+                            <!-- LINE 3: STRATEGY TAGS -->
                             ${row3HTML}
                         </div>
                     </div>
