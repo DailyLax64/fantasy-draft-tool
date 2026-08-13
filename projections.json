@@ -1352,8 +1352,8 @@
   {
     "name": "Zamir White",
     "pos": "RB",
-    "team": "LV",
-    "depth": "RB2",
+    "team": "SF",
+    "depth": "RB7",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -1488,7 +1488,7 @@
     "name": "Khalil Herbert",
     "pos": "RB",
     "team": "SF",
-    "depth": "RB7",
+    "depth": "RB8",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -4685,15 +4685,15 @@
     "name": "Tommy Tremble",
     "pos": "TE",
     "team": "CAR",
-    "depth": "TE1",
+    "depth": "TE2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
     "rushYds": 0,
     "rushTd": 0,
-    "rec": 60,
-    "recYds": 650,
-    "recTd": 5,
+    "rec": 35,
+    "recYds": 380,
+    "recTd": 3,
     "fum": 1
   },
   {
@@ -6177,21 +6177,6 @@
     "fum": 1
   },
   {
-    "name": "Ja'Tavion Sanders",
-    "pos": "TE",
-    "team": "CAR",
-    "depth": "TE2",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 35,
-    "recYds": 380,
-    "recTd": 3,
-    "fum": 1
-  },
-  {
     "name": "Andy Borregales",
     "pos": "K",
     "team": "NE",
@@ -6635,6 +6620,21 @@
     "recYds": 100,
     "recTd": 0,
     "fum": 0
+  },
+  {
+    "name": "Darren Waller",
+    "pos": "TE",
+    "team": "CAR",
+    "depth": "TE1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 60,
+    "recYds": 650,
+    "recTd": 5,
+    "fum": 1
   },
   {
     "name": "Chig Okonkwo",
