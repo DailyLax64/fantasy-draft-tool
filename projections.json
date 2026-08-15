@@ -1023,7 +1023,7 @@
     "name": "Ty Chandler",
     "pos": "RB",
     "team": "NO",
-    "depth": "RB5",
+    "depth": "RB4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -1113,7 +1113,7 @@
     "name": "Roschon Johnson",
     "pos": "RB",
     "team": "CHI",
-    "depth": "RB4",
+    "depth": "RB5",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -1188,7 +1188,7 @@
     "name": "Audric Estime",
     "pos": "RB",
     "team": "NO",
-    "depth": "RB4",
+    "depth": "RB6",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -1712,7 +1712,7 @@
   {
     "name": "Trayveon Williams",
     "pos": "RB",
-    "team": "CIN",
+    "team": "DET",
     "depth": "RB3",
     "passYds": 0,
     "passTd": 0,
@@ -3138,7 +3138,7 @@
     "name": "Kalif Raymond",
     "pos": "WR",
     "team": "CHI",
-    "depth": "WR3",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -4092,21 +4092,6 @@
     "rec": 15,
     "recYds": 100,
     "recTd": 0,
-    "fum": 0
-  },
-  {
-    "name": "Jahdae Walker",
-    "pos": "WR",
-    "team": "CHI",
-    "depth": "WR4",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 30,
-    "recYds": 380,
-    "recTd": 2,
     "fum": 0
   },
   {
@@ -5734,6 +5719,21 @@
     "fum": 1
   },
   {
+    "name": "Ronnie Rivers",
+    "pos": "RB",
+    "team": "LAR",
+    "depth": "RB3",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 300,
+    "rushTd": 2,
+    "rec": 15,
+    "recYds": 100,
+    "recTd": 0,
+    "fum": 0
+  },
+  {
     "name": "Eddy Pineiro",
     "pos": "K",
     "team": "SF",
@@ -5904,6 +5904,21 @@
     "rec": 40,
     "recYds": 300,
     "recTd": 2,
+    "fum": 1
+  },
+  {
+    "name": "Zavion Thomas",
+    "pos": "WR",
+    "team": "CHI",
+    "depth": "WR3",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 45,
+    "recYds": 550,
+    "recTd": 3,
     "fum": 1
   },
   {
@@ -6115,6 +6130,21 @@
     "recYds": 0,
     "recTd": 0,
     "fum": 2
+  },
+  {
+    "name": "Colbie Young",
+    "pos": "WR",
+    "team": "CIN",
+    "depth": "WR4",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 30,
+    "recYds": 380,
+    "recTd": 2,
+    "fum": 0
   },
   {
     "name": "Elijah Arroyo",
@@ -6449,21 +6479,6 @@
     "fum": 0
   },
   {
-    "name": "Jarquez Hunter",
-    "pos": "RB",
-    "team": "LAR",
-    "depth": "RB3",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 300,
-    "rushTd": 2,
-    "rec": 15,
-    "recYds": 100,
-    "recTd": 0,
-    "fum": 0
-  },
-  {
     "name": "Ryan Flournoy",
     "pos": "WR",
     "team": "DAL",
@@ -6733,21 +6748,6 @@
     "recYds": 1000,
     "recTd": 6,
     "fum": 1
-  },
-  {
-    "name": "Mitch Tinsley",
-    "pos": "WR",
-    "team": "CIN",
-    "depth": "WR4",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 30,
-    "recYds": 380,
-    "recTd": 2,
-    "fum": 0
   },
   {
     "name": "Michael Pittman",
