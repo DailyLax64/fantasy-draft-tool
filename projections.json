@@ -1008,7 +1008,7 @@
     "name": "Jerome Ford",
     "pos": "RB",
     "team": "WAS",
-    "depth": "RB6",
+    "depth": "RB2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -5237,21 +5237,6 @@
     "fum": 2
   },
   {
-    "name": "Payne Durham",
-    "pos": "TE",
-    "team": "TB",
-    "depth": "TE2",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 35,
-    "recYds": 380,
-    "recTd": 3,
-    "fum": 1
-  },
-  {
     "name": "Joshua Dobbs",
     "pos": "QB",
     "team": "DET",
@@ -6440,6 +6425,21 @@
     "recYds": 100,
     "recTd": 0,
     "fum": 0
+  },
+  {
+    "name": "Bauer Sharp",
+    "pos": "TE",
+    "team": "TB",
+    "depth": "TE2",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 35,
+    "recYds": 380,
+    "recTd": 3,
+    "fum": 1
   },
   {
     "name": "Ryan Flournoy",
