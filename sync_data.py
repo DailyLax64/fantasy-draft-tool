@@ -1,15 +1,17 @@
 import json
 import requests
-import re
+
+VALID_NFL_TEAMS = {
+    'ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE',
+    'DAL', 'DEN', 'DET', 'GB', 'HOU', 'IND', 'JAX', 'KC',
+    'LAC', 'LAR', 'LV', 'MIA', 'MIN', 'NE', 'NO', 'NYG',
+    'NYJ', 'PHI', 'PIT', 'SEA', 'SF', 'TB', 'TEN', 'WAS'
+}
 
 def fetch_sleeper_data():
-    """
-    Fetches raw player metadata and live regular-season projections from Sleeper API.
-    """
     players_data = {}
     projections_map = {}
 
-    # 1. Fetch complete NFL player database (positions, teams, depth charts)
     try:
         res = requests.get("https://api.sleeper.app/v1/players/nfl", timeout=30)
         if res.status_code == 200:
@@ -18,14 +20,11 @@ def fetch_sleeper_data():
     except Exception as e:
         print(f"Warning: Player metadata fetch failed: {e}")
 
-    # 2. Query Sleeper regular-season projection endpoints
     headers = {"User-Agent": "Mozilla/5.0"}
     projection_urls = [
         "https://api.sleeper.app/projections/nfl/2026?season_type=regular&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF",
         "https://api.sleeper.app/projections/nfl/2026?season_type=regular",
         "https://api.sleeper.app/projections/nfl/regular/2026",
-        # Fallback to previous season projections if 2026 is still populating
-        "https://api.sleeper.app/projections/nfl/2025?season_type=regular&position[]=QB&position[]=RB&position[]=WR&position[]=TE&position[]=K&position[]=DEF",
         "https://api.sleeper.app/projections/nfl/2025?season_type=regular"
     ]
 
@@ -45,9 +44,6 @@ def fetch_sleeper_data():
     return players_data, projections_map
 
 def parse_projections_response(data):
-    """
-    Normalizes Sleeper projection payloads whether returned as an array or dict.
-    """
     proj_map = {}
     if isinstance(data, list):
         for item in data:
@@ -65,10 +61,6 @@ def parse_projections_response(data):
     return proj_map
 
 def normalize_name(name):
-    """
-    Normalizes player names for reliable deduplication.
-    Strips punctuation and suffixes (Jr, Sr, II, III, IV, etc.)
-    """
     if not name:
         return ""
     cleaned = name.lower().replace(".", "").replace("'", "").replace("-", " ").strip()
@@ -78,7 +70,6 @@ def normalize_name(name):
         tokens = tokens[:-1]
     return " ".join(tokens)
 
-# Role baseline stats if Sleeper lists a depth-chart player prior to publishing stats
 DEFAULT_ROLE_STATS = {
     "QB1": {"passYds": 3400, "passTd": 20, "int": 11, "rushYds": 200, "rushTd": 2, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2},
     "QB2": {"passYds": 2800, "passTd": 15, "int": 9, "rushYds": 100, "rushTd": 1, "rec": 0, "recYds": 0, "recTd": 0, "fum": 2},
@@ -104,40 +95,42 @@ def main():
         if pos not in ["QB", "RB", "WR", "TE", "K", "DEF"]:
             continue
 
-        team = s_player.get("team") or s_player.get("player_id")
         status = s_player.get("status")
+        if status in ["Inactive", "Injured Reserve", "Retired"]:
+            continue
+
         depth_order = s_player.get("depth_chart_order")
-        
-        # Handle Team Defenses
+
+        # 1. Defenses: Ensure valid 32-team assignment
         if pos == "DEF":
+            def_team = s_player.get("team") or s_player.get("player_id")
+            if def_team not in VALID_NFL_TEAMS:
+                continue
+
             first_name = s_player.get("first_name", "")
             last_name = s_player.get("last_name", "")
-            base_team_name = f"{first_name} {last_name}".strip() or s_player.get("full_name") or str(pid)
-            if not base_team_name.endswith("DEF"):
-                display_name = f"{base_team_name} DEF"
-            else:
-                display_name = base_team_name
+            base_team_name = f"{first_name} {last_name}".strip() or s_player.get("full_name") or def_team
+            display_name = base_team_name if base_team_name.endswith("DEF") else f"{base_team_name} DEF"
             norm_key = normalize_name(display_name)
-            
+
             stats = projections_map.get(str(pid), {})
             def_pts = stats.get("pts_std") or stats.get("pts_half_ppr") or stats.get("pts_ppr") or 110.0
-            
+
             deduped_players[norm_key] = {
                 "name": display_name,
                 "pos": "DEF",
-                "team": team if team and len(team) <= 4 else pid,
+                "team": def_team,
                 "depth": "DST",
                 "pts": float(def_pts)
             }
             continue
 
-        # Filter out inactive or unassigned players with no depth
-        if status in ["Inactive", "Injured Reserve"]:
-            continue
-        if not team or team == "FA":
-            continue
+        # 2. Skill Players: STRICT VALIDATION (Must be on an active 32 NFL team)
+        team = s_player.get("team")
+        if not team or team not in VALID_NFL_TEAMS:
+            continue  # Drops cut players, free agents, and numeric IDs
 
-        # Position depth filter (keeps viable fantasy players and depth stashes)
+        # Positional depth boundaries
         is_relevant = (
             (pos == "QB" and (not depth_order or depth_order <= 3)) or
             (pos == "RB" and (not depth_order or depth_order <= 4)) or
@@ -161,7 +154,6 @@ def main():
         stats = projections_map.get(str(pid), {})
 
         if pos == "K":
-            # Extract or calculate projected field goal yards
             fg_yds = stats.get("fgm_yds", 0)
             if not fg_yds:
                 fg_yds = (
@@ -187,7 +179,6 @@ def main():
                 "pat": int(pat)
             }
         else:
-            # Skill positions (QB, RB, WR, TE)
             pass_yds = stats.get("pass_yd") if stats.get("pass_yd") is not None else fallback.get("passYds", 0)
             pass_td  = stats.get("pass_td") if stats.get("pass_td") is not None else fallback.get("passTd", 0)
             pass_int = stats.get("pass_int") if stats.get("pass_int") is not None else fallback.get("int", 0)
@@ -214,7 +205,6 @@ def main():
                 "fum": int(round(fum or 0))
             }
 
-        # Deduplication: keep the record with higher projected passing/rushing/receiving activity
         if norm_key in deduped_players:
             existing = deduped_players[norm_key]
             current_activity = (player_entry.get("passYds", 0) + player_entry.get("rushYds", 0) + player_entry.get("recYds", 0))
@@ -226,10 +216,15 @@ def main():
 
     final_player_list = list(deduped_players.values())
 
+    # Circuit breaker: Protect existing file if payload is anomalously small
+    if len(final_player_list) < 50:
+        print("⚠️ API returned insufficient records. Aborting write to protect draft board.")
+        return
+
     with open("projections.json", "w") as f:
         json.dump(final_player_list, f, indent=2)
 
-    print(f"✓ Successfully built API-only projections.json with {len(final_player_list)} unique players.")
+    print(f"✓ Saved {len(final_player_list)} active NFL players with verified team codes to projections.json.")
 
 if __name__ == "__main__":
     main()
