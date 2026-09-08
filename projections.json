@@ -1246,6 +1246,21 @@
     "fum": 1
   },
   {
+    "name": "Jabari Small",
+    "pos": "RB",
+    "team": "DET",
+    "depth": "RB1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 950,
+    "rushTd": 8,
+    "rec": 40,
+    "recYds": 300,
+    "recTd": 2,
+    "fum": 1
+  },
+  {
     "name": "Jalen Hurts",
     "pos": "QB",
     "team": "PHI",
@@ -2305,7 +2320,7 @@
   {
     "name": "Sean Clifford",
     "pos": "QB",
-    "team": "SF",
+    "team": "CIN",
     "depth": "QB1",
     "passYds": 3400,
     "passTd": 20,
@@ -3623,21 +3638,6 @@
     "fum": 1
   },
   {
-    "name": "Irv Charles",
-    "pos": "WR",
-    "team": "SEA",
-    "depth": "WR5",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 20,
-    "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
-  },
-  {
     "name": "Tim Patrick",
     "pos": "WR",
     "team": "NYJ",
@@ -4526,7 +4526,7 @@
     "name": "Malachi Fields",
     "pos": "WR",
     "team": "NYG",
-    "depth": "WR3",
+    "depth": "WR2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -5770,7 +5770,7 @@
     "name": "Darnell Mooney",
     "pos": "WR",
     "team": "NYG",
-    "depth": "WR4",
+    "depth": "WR3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -5779,7 +5779,7 @@
     "rec": 25,
     "recYds": 361,
     "recTd": 2,
-    "fum": 0
+    "fum": 1
   },
   {
     "name": "Joe Forson",
@@ -6311,16 +6311,16 @@
     "name": "Odell Beckham",
     "pos": "WR",
     "team": "NYG",
-    "depth": "WR5",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 20,
+    "rushYds": 0,
     "rushTd": 0,
     "rec": 10,
     "recYds": 120,
     "recTd": 1,
-    "fum": 1
+    "fum": 0
   },
   {
     "name": "Cam Grandy",
@@ -6396,6 +6396,21 @@
     "recYds": 0,
     "recTd": 0,
     "fum": 2
+  },
+  {
+    "name": "Konata Mumpfield",
+    "pos": "WR",
+    "team": "LAR",
+    "depth": "WR6",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 20,
+    "rushTd": 0,
+    "rec": 16,
+    "recYds": 197,
+    "recTd": 1,
+    "fum": 1
   },
   {
     "name": "Jaydn Ott",
@@ -7965,6 +7980,21 @@
     "fum": 1
   },
   {
+    "name": "Quinn Ewers",
+    "pos": "QB",
+    "team": "JAX",
+    "depth": "QB3",
+    "passYds": 195,
+    "passTd": 1,
+    "int": 1,
+    "rushYds": 16,
+    "rushTd": 2,
+    "rec": 0,
+    "recYds": 0,
+    "recTd": 0,
+    "fum": 2
+  },
+  {
     "name": "Trent Sherfield",
     "pos": "WR",
     "team": "BUF",
@@ -8745,18 +8775,18 @@
     "fum": 1
   },
   {
-    "name": "Xavier Smith",
+    "name": "Van Jefferson",
     "pos": "WR",
-    "team": "LAR",
-    "depth": "WR6",
+    "team": "WAS",
+    "depth": "WR1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 16,
+    "rushYds": 20,
     "rushTd": 0,
-    "rec": 7,
-    "recYds": 95,
-    "recTd": 1,
+    "rec": 3,
+    "recYds": 38,
+    "recTd": 6,
     "fum": 1
   },
   {
@@ -9590,11 +9620,11 @@
     "name": "Darius Slayton",
     "pos": "WR",
     "team": "NYG",
-    "depth": "WR2",
+    "depth": "WR1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 15,
+    "rushYds": 20,
     "rushTd": 0,
     "rec": 26,
     "recYds": 383,
@@ -10433,6 +10463,21 @@
     "rec": 80,
     "recYds": 1000,
     "recTd": 6,
+    "fum": 1
+  },
+  {
+    "name": "Patrick Gurd",
+    "pos": "TE",
+    "team": "LV",
+    "depth": "TE1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 60,
+    "recYds": 650,
+    "recTd": 5,
     "fum": 1
   },
   {
