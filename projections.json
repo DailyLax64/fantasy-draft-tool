@@ -534,8 +534,8 @@
   {
     "name": "Joe Milton",
     "pos": "QB",
-    "team": "DAL",
-    "depth": "QB1",
+    "team": "PHI",
+    "depth": "QB3",
     "passYds": 195,
     "passTd": 1,
     "int": 1,
@@ -745,16 +745,16 @@
     "name": "Andrew Beck",
     "pos": "RB",
     "team": "NYJ",
-    "depth": "RB4",
+    "depth": "RB3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 950,
-    "rushTd": 8,
-    "rec": 40,
-    "recYds": 300,
-    "recTd": 2,
-    "fum": 1
+    "rushYds": 300,
+    "rushTd": 2,
+    "rec": 15,
+    "recYds": 100,
+    "recTd": 0,
+    "fum": 0
   },
   {
     "name": "Quez Watkins",
@@ -850,7 +850,7 @@
     "name": "Josh Cuevas",
     "pos": "TE",
     "team": "BAL",
-    "depth": "TE3",
+    "depth": "TE2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -918,7 +918,7 @@
     "name": "Isaiah Davis",
     "pos": "RB",
     "team": "NYJ",
-    "depth": "RB3",
+    "depth": "RB2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -926,8 +926,8 @@
     "rushTd": 2,
     "rec": 13,
     "recYds": 94,
-    "recTd": 0,
-    "fum": 0
+    "recTd": 1,
+    "fum": 1
   },
   {
     "name": "Jaylen Waddle",
@@ -985,7 +985,7 @@
     "name": "Brenen Thompson",
     "pos": "WR",
     "team": "LAC",
-    "depth": "WR6",
+    "depth": "WR5",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -2295,21 +2295,6 @@
     "fum": 0
   },
   {
-    "name": "Lamar Jackson",
-    "pos": "QB",
-    "team": "BAL",
-    "depth": "QB1",
-    "passYds": 3380,
-    "passTd": 27,
-    "int": 8,
-    "rushYds": 668,
-    "rushTd": 5,
-    "rec": 0,
-    "recYds": 0,
-    "recTd": 0,
-    "fum": 4
-  },
-  {
     "name": "Joey Aguilar",
     "pos": "QB",
     "team": "JAX",
@@ -2609,21 +2594,6 @@
     "recYds": 0,
     "recTd": 0,
     "fum": 2
-  },
-  {
-    "name": "Tre' Harris",
-    "pos": "WR",
-    "team": "LAC",
-    "depth": "WR5",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 6,
-    "rushTd": 0,
-    "rec": 39,
-    "recYds": 493,
-    "recTd": 4,
-    "fum": 1
   },
   {
     "name": "Jakobi Meyers",
@@ -2929,12 +2899,12 @@
     "name": "Tyler Huntley",
     "pos": "QB",
     "team": "BAL",
-    "depth": "QB2",
+    "depth": "QB1",
     "passYds": 182,
     "passTd": 1,
     "int": 1,
     "rushYds": 24,
-    "rushTd": 1,
+    "rushTd": 2,
     "rec": 0,
     "recYds": 0,
     "recTd": 0,
@@ -3019,7 +2989,7 @@
     "name": "Theo Johnson",
     "pos": "TE",
     "team": "NYG",
-    "depth": "TE2",
+    "depth": "TE3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -3438,7 +3408,7 @@
     "name": "Tyler Allgeier",
     "pos": "RB",
     "team": "ARI",
-    "depth": "RB2",
+    "depth": "RB1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -3446,7 +3416,7 @@
     "rushTd": 3,
     "rec": 9,
     "recYds": 62,
-    "recTd": 1,
+    "recTd": 2,
     "fum": 1
   },
   {
@@ -3618,7 +3588,7 @@
     "name": "Irvin Charles",
     "pos": "WR",
     "team": "SEA",
-    "depth": "WR5",
+    "depth": "WR1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -4045,7 +4015,7 @@
     "name": "Saquon Barkley",
     "pos": "RB",
     "team": "PHI",
-    "depth": "RB2",
+    "depth": "RB3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -4383,7 +4353,7 @@
     "name": "Chris Manhertz",
     "pos": "TE",
     "team": "NYG",
-    "depth": "TE3",
+    "depth": "TE2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -4391,7 +4361,7 @@
     "rushTd": 0,
     "rec": 1,
     "recYds": 13,
-    "recTd": 5,
+    "recTd": 3,
     "fum": 1
   },
   {
@@ -4852,21 +4822,6 @@
     "fum": 1
   },
   {
-    "name": "Rashee Rice",
-    "pos": "WR",
-    "team": "KC",
-    "depth": "WR1",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 29,
-    "rushTd": 0,
-    "rec": 88,
-    "recYds": 964,
-    "recTd": 7,
-    "fum": 1
-  },
-  {
     "name": "Myles White",
     "pos": "WR",
     "team": "NYJ",
@@ -5027,21 +4982,6 @@
     "rushTd": 8,
     "rec": 40,
     "recYds": 300,
-    "recTd": 2,
-    "fum": 1
-  },
-  {
-    "name": "Jeremiyah Love",
-    "pos": "RB",
-    "team": "ARI",
-    "depth": "RB1",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 897,
-    "rushTd": 5,
-    "rec": 47,
-    "recYds": 351,
     "recTd": 2,
     "fum": 1
   },
@@ -5275,16 +5215,16 @@
     "name": "Malik McClain",
     "pos": "WR",
     "team": "NYJ",
-    "depth": "WR5",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 20,
+    "rushYds": 0,
     "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
+    "rec": 30,
+    "recYds": 380,
+    "recTd": 2,
+    "fum": 0
   },
   {
     "name": "Marquise Brown",
@@ -5380,7 +5320,7 @@
     "name": "Xavier Worthy",
     "pos": "WR",
     "team": "KC",
-    "depth": "WR2",
+    "depth": "WR1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -5646,6 +5586,21 @@
     "fum": 1
   },
   {
+    "name": "Derius Davis",
+    "pos": "WR",
+    "team": "LAC",
+    "depth": "WR6",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 11,
+    "rushTd": 0,
+    "rec": 80,
+    "recYds": 1000,
+    "recTd": 6,
+    "fum": 1
+  },
+  {
     "name": "Cam Little",
     "pos": "K",
     "team": "JAX",
@@ -5819,6 +5774,21 @@
     "fum": 1
   },
   {
+    "name": "Nick Vannett",
+    "pos": "TE",
+    "team": "BAL",
+    "depth": "TE3",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 60,
+    "recYds": 650,
+    "recTd": 5,
+    "fum": 1
+  },
+  {
     "name": "Kurtis Rourke",
     "pos": "QB",
     "team": "SF",
@@ -5849,18 +5819,18 @@
     "fum": 0
   },
   {
-    "name": "Jared Wiley",
-    "pos": "TE",
-    "team": "KC",
-    "depth": "TE3",
+    "name": "Trevor Etienne",
+    "pos": "RB",
+    "team": "CAR",
+    "depth": "RB4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 60,
-    "recYds": 650,
-    "recTd": 5,
+    "rushYds": 164,
+    "rushTd": 1,
+    "rec": 8,
+    "recYds": 58,
+    "recTd": 2,
     "fum": 1
   },
   {
@@ -6243,7 +6213,7 @@
     "name": "Cyrus Allen",
     "pos": "WR",
     "team": "KC",
-    "depth": "WR4",
+    "depth": "WR3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -6252,7 +6222,7 @@
     "rec": 34,
     "recYds": 425,
     "recTd": 3,
-    "fum": 0
+    "fum": 1
   },
   {
     "name": "Coleman Owen",
@@ -6424,6 +6394,21 @@
     "pos": "RB",
     "team": "LAR",
     "depth": "RB1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 950,
+    "rushTd": 8,
+    "rec": 40,
+    "recYds": 300,
+    "recTd": 2,
+    "fum": 1
+  },
+  {
+    "name": "Kene Nwangwu",
+    "pos": "RB",
+    "team": "NYJ",
+    "depth": "RB4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -6757,21 +6742,6 @@
     "recYds": 87,
     "recTd": 0,
     "fum": 0
-  },
-  {
-    "name": "Kyle Monangai",
-    "pos": "RB",
-    "team": "CHI",
-    "depth": "RB2",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 751,
-    "rushTd": 6,
-    "rec": 23,
-    "recYds": 165,
-    "recTd": 1,
-    "fum": 1
   },
   {
     "name": "Michael Briscoe",
@@ -7720,16 +7690,16 @@
     "name": "Carson Steele",
     "pos": "RB",
     "team": "PHI",
-    "depth": "RB3",
+    "depth": "RB2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 300,
-    "rushTd": 2,
-    "rec": 15,
-    "recYds": 100,
-    "recTd": 0,
-    "fum": 0
+    "rushYds": 550,
+    "rushTd": 4,
+    "rec": 25,
+    "recYds": 180,
+    "recTd": 1,
+    "fum": 1
   },
   {
     "name": "Keon Coleman",
@@ -7759,6 +7729,21 @@
     "rec": 1,
     "recYds": 5,
     "recTd": 2,
+    "fum": 1
+  },
+  {
+    "name": "Jake Briningstool",
+    "pos": "TE",
+    "team": "KC",
+    "depth": "TE3",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 60,
+    "recYds": 650,
+    "recTd": 5,
     "fum": 1
   },
   {
@@ -7840,7 +7825,7 @@
     "name": "Bo Melton",
     "pos": "WR",
     "team": "GB",
-    "depth": "WR4",
+    "depth": "WR3",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -7848,8 +7833,8 @@
     "rushTd": 0,
     "rec": 4,
     "recYds": 52,
-    "recTd": 2,
-    "fum": 0
+    "recTd": 3,
+    "fum": 1
   },
   {
     "name": "Colbie Young",
@@ -8117,7 +8102,7 @@
     "name": "Adonai Mitchell",
     "pos": "WR",
     "team": "NYJ",
-    "depth": "WR4",
+    "depth": "WR6",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -8126,7 +8111,7 @@
     "rec": 35,
     "recYds": 443,
     "recTd": 3,
-    "fum": 0
+    "fum": 1
   },
   {
     "name": "Hayden Rucci",
@@ -8314,6 +8299,21 @@
     "rec": 70,
     "recYds": 770,
     "recTd": 4,
+    "fum": 1
+  },
+  {
+    "name": "Anthony Gould",
+    "pos": "WR",
+    "team": "IND",
+    "depth": "WR5",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 6,
+    "rushTd": 0,
+    "rec": 1,
+    "recYds": 16,
+    "recTd": 6,
     "fum": 1
   },
   {
@@ -8568,7 +8568,7 @@
     "name": "Skyy Moore",
     "pos": "WR",
     "team": "GB",
-    "depth": "WR3",
+    "depth": "WR5",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -8576,7 +8576,7 @@
     "rushTd": 0,
     "rec": 1,
     "recYds": 14,
-    "recTd": 3,
+    "recTd": 6,
     "fum": 1
   },
   {
@@ -8620,16 +8620,16 @@
     "name": "Zonovan Knight",
     "pos": "RB",
     "team": "ARI",
-    "depth": "RB3",
+    "depth": "RB2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 300,
-    "rushTd": 2,
-    "rec": 15,
-    "recYds": 100,
-    "recTd": 0,
-    "fum": 0
+    "rushYds": 550,
+    "rushTd": 4,
+    "rec": 25,
+    "recYds": 180,
+    "recTd": 1,
+    "fum": 1
   },
   {
     "name": "Chuba Hubbard",
@@ -8936,16 +8936,16 @@
     "name": "Roschon Johnson",
     "pos": "RB",
     "team": "CHI",
-    "depth": "RB3",
+    "depth": "RB2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
     "rushYds": 42,
-    "rushTd": 2,
+    "rushTd": 4,
     "rec": 2,
     "recYds": 14,
-    "recTd": 0,
-    "fum": 0
+    "recTd": 1,
+    "fum": 1
   },
   {
     "name": "Ka'imi Fairbairn",
@@ -9094,16 +9094,16 @@
     "name": "Nikko Remigio",
     "pos": "WR",
     "team": "KC",
-    "depth": "WR5",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
     "rushYds": 6,
     "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
+    "rec": 30,
+    "recYds": 380,
+    "recTd": 2,
+    "fum": 0
   },
   {
     "name": "Bauer Sharp",
@@ -9399,21 +9399,6 @@
     "fum": 1
   },
   {
-    "name": "Darius Slayton",
-    "pos": "WR",
-    "team": "IND",
-    "depth": "WR4",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 26,
-    "recYds": 383,
-    "recTd": 2,
-    "fum": 0
-  },
-  {
     "name": "Deshaun Watson",
     "pos": "QB",
     "team": "CLE",
@@ -9620,16 +9605,16 @@
     "name": "J. Michael Sturdivant",
     "pos": "WR",
     "team": "GB",
-    "depth": "WR5",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
-    "rushYds": 20,
+    "rushYds": 0,
     "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
+    "rec": 30,
+    "recYds": 380,
+    "recTd": 2,
+    "fum": 0
   },
   {
     "name": "Marquez Valdes-Scantling",
@@ -9827,21 +9812,6 @@
     "fum": 3
   },
   {
-    "name": "Tom Kennedy",
-    "pos": "WR",
-    "team": "DET",
-    "depth": "WR6",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 20,
-    "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
-  },
-  {
     "name": "Kevin Coleman",
     "pos": "WR",
     "team": "MIA",
@@ -10027,21 +9997,6 @@
     "rec": 80,
     "recYds": 1000,
     "recTd": 6,
-    "fum": 1
-  },
-  {
-    "name": "Matt Hibner",
-    "pos": "TE",
-    "team": "BAL",
-    "depth": "TE2",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 0,
-    "rushTd": 0,
-    "rec": 13,
-    "recYds": 128,
-    "recTd": 1,
     "fum": 1
   },
   {
@@ -10240,21 +10195,6 @@
     "fum": 1
   },
   {
-    "name": "Breece Hall",
-    "pos": "RB",
-    "team": "NYJ",
-    "depth": "RB2",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 986,
-    "rushTd": 6,
-    "rec": 37,
-    "recYds": 314,
-    "recTd": 2,
-    "fum": 2
-  },
-  {
     "name": "Kansas City Chiefs DEF",
     "pos": "DEF",
     "team": "KC",
@@ -10280,7 +10220,7 @@
     "name": "Deion Burks",
     "pos": "WR",
     "team": "IND",
-    "depth": "WR6",
+    "depth": "WR4",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -10289,7 +10229,7 @@
     "rec": 8,
     "recYds": 91,
     "recTd": 1,
-    "fum": 1
+    "fum": 0
   },
   {
     "name": "Damon Bankston",
@@ -10325,7 +10265,7 @@
     "name": "Ashton Dulin",
     "pos": "WR",
     "team": "IND",
-    "depth": "WR5",
+    "depth": "WR6",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -10505,7 +10445,7 @@
     "name": "Jalen Royals",
     "pos": "WR",
     "team": "KC",
-    "depth": "WR3",
+    "depth": "WR2",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
