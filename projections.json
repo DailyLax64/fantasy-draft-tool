@@ -266,7 +266,7 @@
     "name": "E.J. Jenkins",
     "pos": "TE",
     "team": "PHI",
-    "depth": "TE3",
+    "depth": "TE1",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -2589,21 +2589,6 @@
     "fum": 1
   },
   {
-    "name": "Nate Carter",
-    "pos": "RB",
-    "team": "KC",
-    "depth": "RB1",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 950,
-    "rushTd": 8,
-    "rec": 40,
-    "recYds": 300,
-    "recTd": 2,
-    "fum": 1
-  },
-  {
     "name": "Caleb Scott",
     "pos": "WR",
     "team": "TEN",
@@ -2772,12 +2757,12 @@
     "name": "Kyle Trask",
     "pos": "QB",
     "team": "DAL",
-    "depth": "QB2",
-    "passYds": 2800,
-    "passTd": 15,
-    "int": 9,
-    "rushYds": 100,
-    "rushTd": 1,
+    "depth": "QB1",
+    "passYds": 3400,
+    "passTd": 20,
+    "int": 11,
+    "rushYds": 200,
+    "rushTd": 2,
     "rec": 0,
     "recYds": 0,
     "recTd": 0,
@@ -3799,7 +3784,7 @@
     "name": "DeAndre Carter",
     "pos": "WR",
     "team": "DET",
-    "depth": "WR1",
+    "depth": "WR5",
     "passYds": 0,
     "passTd": 0,
     "int": 0,
@@ -5145,6 +5130,21 @@
     "pat": 36
   },
   {
+    "name": "Jaydon Blue",
+    "pos": "RB",
+    "team": "PHI",
+    "depth": "RB1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 289,
+    "rushTd": 2,
+    "rec": 9,
+    "recYds": 67,
+    "recTd": 2,
+    "fum": 1
+  },
+  {
     "name": "Lenny Krieg",
     "pos": "K",
     "team": "GB",
@@ -5420,21 +5420,6 @@
     "rec": 2,
     "recYds": 24,
     "recTd": 3,
-    "fum": 1
-  },
-  {
-    "name": "Zavier Scott",
-    "pos": "RB",
-    "team": "CHI",
-    "depth": "RB1",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 21,
-    "rushTd": 8,
-    "rec": 2,
-    "recYds": 15,
-    "recTd": 2,
     "fum": 1
   },
   {
@@ -6564,6 +6549,21 @@
     "fum": 1
   },
   {
+    "name": "Shawn Bowman",
+    "pos": "TE",
+    "team": "ARI",
+    "depth": "TE1",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 0,
+    "rushTd": 0,
+    "rec": 60,
+    "recYds": 650,
+    "recTd": 5,
+    "fum": 1
+  },
+  {
     "name": "Kansei Matsuzawa",
     "pos": "K",
     "team": "LV",
@@ -7142,6 +7142,21 @@
     "fum": 1
   },
   {
+    "name": "David Sills V",
+    "pos": "WR",
+    "team": "TB",
+    "depth": "WR6",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 6,
+    "rushTd": 0,
+    "rec": 9,
+    "recYds": 113,
+    "recTd": 1,
+    "fum": 1
+  },
+  {
     "name": "DeeJay Dallas",
     "pos": "RB",
     "team": "MIN",
@@ -7635,7 +7650,7 @@
     "fum": 2
   },
   {
-    "name": "Trent Sherfield Sr.",
+    "name": "Trent Sherfield",
     "pos": "WR",
     "team": "BUF",
     "depth": "WR1",
@@ -9531,6 +9546,21 @@
     "rushTd": 5,
     "rec": 23,
     "recYds": 167,
+    "recTd": 1,
+    "fum": 1
+  },
+  {
+    "name": "Zach Charbonnet",
+    "pos": "RB",
+    "team": "SEA",
+    "depth": "RB4",
+    "passYds": 0,
+    "passTd": 0,
+    "int": 0,
+    "rushYds": 264,
+    "rushTd": 3,
+    "rec": 11,
+    "recYds": 78,
     "recTd": 1,
     "fum": 1
   },
