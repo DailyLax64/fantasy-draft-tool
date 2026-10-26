@@ -2310,21 +2310,6 @@
     "pts": 64.0
   },
   {
-    "name": "Montorie Foster Jr.",
-    "pos": "WR",
-    "team": "SEA",
-    "depth": "WR1",
-    "passYds": 0,
-    "passTd": 0,
-    "int": 0,
-    "rushYds": 20,
-    "rushTd": 0,
-    "rec": 80,
-    "recYds": 1000,
-    "recTd": 6,
-    "fum": 1
-  },
-  {
     "name": "Lamar Jackson",
     "pos": "QB",
     "team": "BAL",
